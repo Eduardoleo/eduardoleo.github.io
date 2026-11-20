@@ -1,0 +1,314 @@
+{
+  "$comment": "Para agregar un proyecto: copia un objeto, cambia slug/order y los textos es/en. case=true genera /proyectos/<slug>/ y /en/projects/<slug>/ (requiere problem, role, solution, decisions, results y limits); case=false muestra solo la tarjeta. 'finding' y 'security' son secciones opcionales. Ver docs/AGREGAR_PROYECTO.md.",
+  "projects": [
+    {
+      "slug": "soporte-patitos",
+      "order": 1,
+      "featured": true,
+      "case": true,
+      "year": 2026,
+      "stack": ["C#", "ASP.NET Core 10", "Entity Framework Core", "SQL Server", "JWT", "React", "Vite"],
+      "repo": "https://github.com/Eduardoleo/soporte-patitos-rrhh",
+      "screenshots": [
+        { "file": "soporte-01-login.png",
+          "es": { "caption": "Inicio de sesión", "alt": "Pantalla de inicio de sesión de Soporte Patitos con campos de correo empresarial y contraseña." },
+          "en": { "caption": "Sign-in", "alt": "Soporte Patitos sign-in screen with company email and password fields." } },
+        { "file": "soporte-02-empleados.png",
+          "es": { "caption": "Gestión de empleados", "alt": "Tabla de empleados ficticios con cédula, puesto, salario, departamento, fecha de ingreso y estado." },
+          "en": { "caption": "Employee management", "alt": "Table of fictitious employees with ID, position, salary, department, start date and status." } },
+        { "file": "soporte-03-asistencia.png",
+          "es": { "caption": "Asistencia general de un día", "alt": "Reporte de asistencia del 14 de octubre de 2026 con horas de entrada y salida, minutos tarde y horas extra de 25 empleados ficticios." },
+          "en": { "caption": "Daily attendance report", "alt": "Attendance report for 14 October 2026 showing clock-in and clock-out times, minutes late and overtime for 25 fictitious employees." } },
+        { "file": "soporte-04-planillas.png",
+          "es": { "caption": "Planilla mensual", "alt": "Planilla de noviembre de 2026 con salario, horas extra, deducción de CCSS, vacaciones y salario total por empleado, y un botón para descargar cada colilla." },
+          "en": { "caption": "Monthly payroll", "alt": "November 2026 payroll with salary, overtime, social security deduction, vacation and total pay per employee, and a button to download each pay stub." } },
+        { "file": "soporte-05-colilla.png",
+          "es": { "caption": "Colilla de pago en PDF", "alt": "Comprobante de pago en PDF de un empleado ficticio con ingresos, deducciones y neto a pagar." },
+          "en": { "caption": "PDF pay stub", "alt": "PDF pay stub for a fictitious employee showing earnings, deductions and net pay." } }
+      ],
+      "es": {
+        "title": "Soporte Patitos S.A.",
+        "kind": "Back end .NET · Recursos humanos y nómina",
+        "summary": "Sistema de personal, asistencia, ausencias, evaluaciones y planillas, con las reglas de negocio y los permisos aplicados en la API.",
+        "cv": "Sistema de RR. HH. y nómina con reglas de negocio y permisos aplicados en la API.",
+        "problem": "Una empresa de soporte necesita llevar en un solo sistema a sus empleados, la asistencia, las solicitudes de ausencia, las evaluaciones y las planillas. El reto del back end es mantener esos datos coherentes entre sí y limitar qué puede ver cada persona: un empleado consulta su propia colilla, nómina ve todas.",
+        "role": "Proyecto universitario de un equipo de tres estudiantes (UIA, 2026). Mi contribución: back end completo y base de datos, y apoyo en correcciones del front end. Mis compañeros trabajaron en la paleta de colores, el despliegue y parte del front end.",
+        "solution": "Una interfaz React consume una API ASP.NET Core organizada en capas: los controladores reciben las solicitudes, la capa de negocio aplica las reglas y la capa de datos persiste en SQL Server con Entity Framework Core. Esa separación permite probar las reglas en memoria y la persistencia por separado.",
+        "architecture": ["Interfaz React", "API / controladores", "Reglas de negocio", "Persistencia (EF Core)", "SQL Server"],
+        "decisions": [
+          { "title": "El permiso se comprueba en la API", "body": "Ocultar una pantalla no protege su endpoint. Las lecturas personales toman el empleado del token y comprueban que el recurso le pertenece; los listados globales quedan restringidos a nómina y administración." },
+          { "title": "El servidor manda sobre el salario neto", "body": "El salario sale del puesto del empleado. El servidor recibe los rebajos como datos, rechaza importes negativos y nunca acepta un neto calculado por el cliente." },
+          { "title": "Contraseñas con hash moderno y migración transparente", "body": "Las contraseñas usan el hasher de ASP.NET Core; las cuentas heredadas con SHA-256 se migran al validar el siguiente inicio de sesión." },
+          { "title": "Un error público no es un diagnóstico interno", "body": "Planillas y colillas distinguen validaciones de negocio, recursos inexistentes y fallos inesperados, sin filtrar detalles de SQL ni de excepciones al cliente." },
+          { "title": "Dependencias al día", "body": "Migré el back end a .NET 10 LTS y el front end de Create React App a Vite, y reemplacé librerías de exportación con vulnerabilidades conocidas. Quedaron 0 vulnerabilidades conocidas en NuGet y npm." }
+        ],
+        "results": [
+          "Compila sin errores con .NET 10 y pasa 29 de 29 verificaciones automáticas que no necesitan base de datos: hashing, roles, permisos de planillas, cambio de clave y reportes.",
+          "Con SQL Server local: la colilla se guarda y se relee a través de las capas de negocio y datos, y la transacción se revierte sin dejar filas; además, 96 comprobaciones HTTP reales de inicio de sesión y roles con cuentas temporales que después se eliminan.",
+          "0 vulnerabilidades conocidas en las dependencias de NuGet y npm, y lint del front end sin avisos.",
+          "Configuración local con user-secrets y una base demo con datos ficticios, separada de cualquier dato real; un solo comando la crea con empleados, asistencia y estructura organizacional."
+        ],
+        "limits": [
+          "Es un ejercicio académico: la nómina recibe los rebajos como datos y no calcula tarifas legales ni tiene validez fiscal o laboral.",
+          "Quedan advertencias de nulabilidad por resolver y la cobertura de pruebas no abarca todos los flujos de asistencia, ausencias y evaluaciones.",
+          "No hay demo pública conectada a una base de datos. El código está en un repositorio público nuevo, con historial limpio."
+        ]
+      },
+      "en": {
+        "title": "Soporte Patitos S.A.",
+        "kind": ".NET back end · HR and payroll",
+        "summary": "Staff, attendance, leave, performance review and payroll system, with business rules and permissions enforced in the API.",
+        "cv": "HR and payroll system with business rules and permissions enforced in the API.",
+        "problem": "A support company needs one system for its employees, attendance, leave requests, performance reviews and payroll. The back-end challenge is keeping that data consistent and limiting what each person can see: employees read their own pay stub, payroll sees everyone's.",
+        "role": "University project by a team of three students (UIA, 2026). My contribution: the full back end and database, plus support fixing the front end. My teammates handled the color palette, deployment and part of the front end.",
+        "solution": "A React interface talks to a layered ASP.NET Core API: controllers receive requests, the business layer applies the rules and the data layer persists to SQL Server through Entity Framework Core. That separation lets the rules be tested in memory and persistence be tested on its own.",
+        "architecture": ["React UI", "API / controllers", "Business rules", "Persistence (EF Core)", "SQL Server"],
+        "decisions": [
+          { "title": "Permissions are checked in the API", "body": "Hiding a screen doesn't protect its endpoint. Personal reads take the employee from the token and verify ownership; global listings are restricted to payroll and admin roles." },
+          { "title": "The server owns the net salary", "body": "Salary comes from the employee's position. The server takes deductions as data, rejects negative amounts and never accepts a net amount computed by the client." },
+          { "title": "Modern password hashing with transparent migration", "body": "Passwords use the ASP.NET Core hasher; legacy SHA-256 accounts are upgraded on their next successful sign-in." },
+          { "title": "A public error is not an internal diagnosis", "body": "Payroll endpoints separate business validation, missing resources and unexpected failures, without leaking SQL or exception details to the client." },
+          { "title": "Up-to-date dependencies", "body": "I moved the back end to .NET 10 LTS and the front end from Create React App to Vite, and replaced export libraries with known vulnerabilities. That left 0 known vulnerabilities in NuGet and npm." }
+        ],
+        "results": [
+          "Builds without errors on .NET 10 and passes 29 of 29 automated checks that need no database: hashing, roles, payroll permissions, password change and reports.",
+          "With a local SQL Server: the pay stub is saved and read back through the business and data layers, and the transaction rolls back leaving no rows; plus 96 real HTTP checks of sign-in and roles using temporary accounts that are deleted afterwards.",
+          "0 known vulnerabilities in NuGet and npm dependencies, and a warning-free front-end lint.",
+          "Local setup with user-secrets and a demo database with fictitious data, kept apart from any real data; a single command creates it with employees, attendance and org structure."
+        ],
+        "limits": [
+          "It's an academic exercise: payroll takes deductions as input and doesn't compute statutory rates or have legal or tax validity.",
+          "Nullability warnings remain, and test coverage doesn't span every attendance, leave and review flow.",
+          "There's no public demo connected to a database. The code is in a new public repository with a clean history."
+        ]
+      }
+    },
+    {
+      "slug": "bellas-boutique",
+      "order": 2,
+      "featured": true,
+      "case": true,
+      "year": 2025,
+      "stack": ["React", "Vite", "Node.js", "Express", "SQLite", "JWT"],
+      "repo": "https://github.com/Eduardoleo/bellas-boutique-tienda",
+      "es": {
+        "title": "Bellas Boutique",
+        "kind": "Full stack · Comercio electrónico",
+        "summary": "Tienda en línea con catálogo, carrito, checkout sin cobros duplicados, facturas PDF y XML, roles y protección contra abuso de cuentas, respaldada por 149 pruebas automáticas.",
+        "cv": "Tienda en línea con checkout sin cobros duplicados, facturas PDF y XML, roles y 149 pruebas.",
+        "problem": "Una boutique quiere vender en línea sin depender de una plataforma ajena: mostrar su catálogo, cobrar, emitir la factura y atender consultas. En una tienda los errores cuestan dinero: un doble clic no puede cobrar dos veces, el precio no puede venir del navegador y dos compras simultáneas no pueden vender la misma última unidad.",
+        "role": "Desarrollo principal: base de datos, back end y front end. Proyecto académico en equipo del curso Diseño Humano-Computadora (UIA, 2025); los compañeros contribuyeron con correcciones puntuales.",
+        "solution": "Un front end React con Vite consume una API Express con autenticación JWT y roles de administración, venta y cliente. SQLite guarda catálogo, inventario, pedidos y facturas; el servidor genera la factura en PDF y en XML y envía las notificaciones por correo. Incluye un chat de soporte y recuperación de contraseña.",
+        "architecture": ["Interfaz React", "API Express + JWT", "Reglas de compra e inventario", "SQLite", "Facturas PDF / XML"],
+        "decisions": [
+          { "title": "El precio lo calcula el servidor", "body": "El carrito solo envía productos y cantidades. El total, los impuestos y la factura se calculan con los precios de la base de datos, así que modificar la petición desde el navegador no cambia lo que se cobra." },
+          { "title": "Un checkout que tolera reintentos", "body": "Cada compra lleva una clave de idempotencia: si la persona hace doble clic o la red reintenta, se devuelve el mismo pedido en lugar de crear y cobrar uno nuevo." },
+          { "title": "El inventario no se vende dos veces", "body": "El stock se valida y descuenta en el servidor al confirmar la compra, y hay pruebas de concurrencia que comprueban que dos compras simultáneas no pueden llevarse la misma última unidad." },
+          { "title": "Cuentas protegidas contra abuso", "body": "El inicio de sesión y la recuperación de contraseña responden igual exista o no la cuenta, tienen límites de intentos y usan tokens de recuperación de un solo uso guardados como hash." },
+          { "title": "Cada recurso tiene dueño", "body": "Pedidos, facturas y conversaciones de soporte se consultan comprobando a quién pertenecen, no solo que exista una sesión." }
+        ],
+        "results": [
+          "149 pruebas automáticas del servidor en verde: propiedad de recursos, idempotencia del checkout, concurrencia de inventario, enumeración de cuentas, límites de intentos y CORS.",
+          "Build de producción del cliente correcto y 0 vulnerabilidades conocidas en npm audit del servidor y del cliente.",
+          "CORS limitado al origen del front end y remitente del correo de soporte tomado de la configuración, sin direcciones escritas en el código.",
+          "Entorno demo reproducible con datos ficticios: productos, cuentas y compras generados desde cero, sin datos reales."
+        ],
+        "limits": [
+          "El pago es simulado: no hay integración con una pasarela real.",
+          "La demo funciona en local; no hay una tienda pública en línea.",
+          "El código está en un repositorio público nuevo, sin el historial que contenía datos de prueba anteriores."
+        ]
+      },
+      "en": {
+        "title": "Bellas Boutique",
+        "kind": "Full stack · E-commerce",
+        "summary": "Online store with catalog, cart, duplicate-safe checkout, PDF and XML invoices, roles and account-abuse protection, backed by 149 automated tests.",
+        "cv": "Online store with duplicate-safe checkout, PDF and XML invoices, roles and 149 tests.",
+        "problem": "A boutique wants to sell online without depending on someone else's platform: show its catalog, take payment, issue the invoice and answer questions. In a store, bugs cost money: a double click can't charge twice, the price can't come from the browser, and two simultaneous purchases can't sell the same last item.",
+        "role": "Lead developer: database, back end and front end. Team academic project for the course Diseño Humano-Computadora (human–computer design; UIA, 2025); teammates contributed specific bug fixes.",
+        "solution": "A React front end built with Vite talks to an Express API with JWT authentication and admin, sales and customer roles. SQLite stores the catalog, inventory, orders and invoices; the server produces PDF and XML invoices and sends email notifications. It also includes support chat and password recovery.",
+        "architecture": ["React UI", "Express API + JWT", "Purchase and stock rules", "SQLite", "PDF / XML invoices"],
+        "decisions": [
+          { "title": "The server computes the price", "body": "The cart only sends products and quantities. Totals, taxes and the invoice are calculated from database prices, so tampering with the request in the browser doesn't change what is charged." },
+          { "title": "A checkout that tolerates retries", "body": "Each purchase carries an idempotency key: on a double click or a network retry, the same order is returned instead of creating and charging a new one." },
+          { "title": "Stock is never sold twice", "body": "Stock is validated and decremented on the server when the purchase is confirmed, and concurrency tests check that two simultaneous purchases can't take the same last unit." },
+          { "title": "Accounts protected against abuse", "body": "Sign-in and password recovery respond the same whether or not the account exists, are rate-limited and use single-use recovery tokens stored as hashes." },
+          { "title": "Every resource has an owner", "body": "Orders, invoices and support conversations are read after checking who they belong to, not just that a session exists." }
+        ],
+        "results": [
+          "149 automated server tests passing: resource ownership, checkout idempotency, stock concurrency, account enumeration, rate limits and CORS.",
+          "Client production build succeeds, with 0 known vulnerabilities in npm audit for both server and client.",
+          "CORS restricted to the front-end origin, and the support email sender read from configuration with no addresses hard-coded.",
+          "Reproducible demo environment with fictitious data: products, accounts and purchases generated from scratch, with no real data."
+        ],
+        "limits": [
+          "Payment is simulated: there's no integration with a real payment gateway.",
+          "The demo runs locally; there's no public live store.",
+          "The code is in a new public repository, without the history that contained earlier test data."
+        ]
+      }
+    },
+    {
+      "slug": "aves-costa-rica",
+      "order": 3,
+      "featured": false,
+      "case": true,
+      "year": 2025,
+      "stack": ["Python", "Flask", "Prolog", "Azure OpenAI"],
+      "repo": "https://github.com/Eduardoleo/aves-costa-rica-prolog",
+      "es": {
+        "title": "Aves de Costa Rica",
+        "kind": "Python · Base de conocimiento e IA",
+        "summary": "Buscador de aves costarricenses por sus características sobre una base de conocimiento en Prolog, con sugerencias generadas por IA y una vulnerabilidad de inyección detectada y corregida.",
+        "cv": "Buscador de aves sobre una base de conocimiento en Prolog, con IA y una inyección corregida.",
+        "problem": "Identificar un ave a partir de lo que una persona recuerda (color, tamaño, hábitat, alimentación) es difícil con listas o buscadores de texto. Hacía falta una forma de cruzar varias características a la vez sobre un catálogo de especies de Costa Rica y ayudar a interpretar descripciones imprecisas.",
+        "role": "Desarrollo principal: base de conocimiento en Prolog, back end Flask, integración con Azure OpenAI y front end. Proyecto académico en equipo del curso Lenguajes y Paradigmas (UIA, 2025); los compañeros contribuyeron con correcciones puntuales.",
+        "solution": "Una aplicación Flask consulta una base de conocimiento en SWI-Prolog con los hechos de las especies y sus características. Azure OpenAI sugiere filtros a partir de una descripción libre y el resultado se valida contra la base de Prolog. A partir de una foto, la aplicación extrae el color dominante para usarlo como filtro; no clasifica la imagen.",
+        "architecture": ["Interfaz web", "API Flask", "Validación de filtros", "Base de conocimiento Prolog", "Sugerencias Azure OpenAI"],
+        "decisions": [
+          { "title": "Prolog para cruzar características", "body": "Una base de hechos permite combinar filtros (color, tamaño, hábitat, alimentación) de forma declarativa y añadir especies sin cambiar el código de búsqueda." },
+          { "title": "La IA sugiere, la base de conocimiento decide", "body": "Lo que propone el modelo de lenguaje se trata como una sugerencia: solo se usa si coincide con valores válidos y con especies que existen en la base." },
+          { "title": "Configuración segura y modo demo", "body": "Las credenciales de Azure se leen del entorno, nunca del código. Sin credenciales, la aplicación funciona en modo demo y maneja los límites de uso del servicio." }
+        ],
+        "security": {
+          "title": "Caso de seguridad: inyección de código en las consultas Prolog",
+          "items": [
+            { "label": "Clase de vulnerabilidad", "body": "Inyección de código (CWE-94), del tipo de las neutralizaciones incorrectas de entrada (CWE-74), agravada porque parte de la entrada venía de un modelo de lenguaje." },
+            { "label": "Cómo la detecté", "body": "Al revisar el código vi que los filtros de búsqueda se concatenaban dentro del texto de la consulta Prolog. Lo confirmé en local con una prueba inofensiva: un filtro manipulado conseguía añadir un hecho marcador a la base de conocimiento." },
+            { "label": "Impacto", "body": "Cualquiera que usara el formulario o la API podía ejecutar objetivos Prolog arbitrarios y modificar la base de hechos; en el peor caso, ejecutar comandos en el servidor. Las sugerencias del modelo seguían el mismo camino, así que una inyección de prompt podía terminar en inyección de código. El generador de la base de hechos tenía además un escape incompleto." },
+            { "label": "Mitigación", "body": "Separé los datos del código: las búsquedas llaman siempre a un predicado fijo, cada valor pasa una lista blanca estricta y se cita como átomo con escape completo, y lo que no cumple recibe un error 400 claro. Los errores internos ya no llegan al cliente y el servidor registra solo el tipo de excepción." },
+            { "label": "Verificación", "body": "Escribí primero pruebas de regresión que reproducían el problema y fallaban; después del arreglo pasan todas, y las búsquedas válidas devuelven exactamente los mismos resultados que antes." },
+            { "label": "Lección", "body": "La salida de un modelo de lenguaje es entrada no confiable. Ningún lenguaje que se interpreta, sea SQL, shell o Prolog, debe construirse concatenando texto externo." }
+          ]
+        },
+        "results": [
+          "33 pruebas automáticas en verde, incluidas las de regresión de la inyección, las de CORS y las de manejo de configuración de Azure.",
+          "CORS apagado por defecto y limitado a los orígenes configurados; fotos de Wikimedia Commons con licencia libre y atribución visible.",
+          "Las consultas nuevas devuelven los mismos resultados que las anteriores en los casos de búsqueda probados.",
+          "Funciona en modo demo sin credenciales ni llamadas de red."
+        ],
+        "limits": [
+          "No es un clasificador visual: de la foto solo se usa el color dominante.",
+          "Las búsquedas con tildes (por ejemplo, «montaña») todavía no devuelven resultados por la codificación de la base de hechos.",
+          "La demo funciona en local; no hay una versión pública en línea."
+        ]
+      },
+      "en": {
+        "title": "Birds of Costa Rica",
+        "kind": "Python · Knowledge base and AI",
+        "summary": "Search Costa Rican birds by their features over a Prolog knowledge base, with AI-generated suggestions and an injection vulnerability found and fixed.",
+        "cv": "Bird search over a Prolog knowledge base, with AI suggestions and an injection flaw fixed.",
+        "problem": "Identifying a bird from what someone remembers (color, size, habitat, diet) is hard with lists or text search. It needed a way to combine several features at once over a catalog of Costa Rican species and to help interpret vague descriptions.",
+        "role": "Lead developer: Prolog knowledge base, Flask back end, Azure OpenAI integration and front end. Team academic project for the course Lenguajes y Paradigmas (programming languages and paradigms; UIA, 2025); teammates contributed specific bug fixes.",
+        "solution": "A Flask application queries an SWI-Prolog knowledge base holding the species and their features. Azure OpenAI suggests filters from a free-text description, and the result is validated against the Prolog base. From a photo, the app extracts the dominant color to use as a filter; it doesn't classify the image.",
+        "architecture": ["Web UI", "Flask API", "Filter validation", "Prolog knowledge base", "Azure OpenAI suggestions"],
+        "decisions": [
+          { "title": "Prolog to combine features", "body": "A fact base lets filters (color, size, habitat, diet) be combined declaratively and species be added without changing the search code." },
+          { "title": "AI suggests, the knowledge base decides", "body": "What the language model proposes is treated as a suggestion: it's only used if it matches valid values and species that exist in the base." },
+          { "title": "Safe configuration and demo mode", "body": "Azure credentials are read from the environment, never from the code. Without credentials, the app runs in demo mode and handles the service's usage limits." }
+        ],
+        "security": {
+          "title": "Security case: code injection in Prolog queries",
+          "items": [
+            { "label": "Vulnerability class", "body": "Code injection (CWE-94), a form of improper input neutralization (CWE-74), made worse because part of the input came from a language model." },
+            { "label": "How I found it", "body": "While reviewing the code I noticed search filters were concatenated into the Prolog query text. I confirmed it locally with a harmless test: a crafted filter managed to add a marker fact to the knowledge base." },
+            { "label": "Impact", "body": "Anyone using the form or the API could run arbitrary Prolog goals and modify the fact base; in the worst case, run commands on the server. The model's suggestions followed the same path, so a prompt injection could end up as code injection. The fact-base generator also had incomplete escaping." },
+            { "label": "Mitigation", "body": "I separated data from code: searches always call a fixed predicate, each value passes a strict allowlist and is quoted as an atom with full escaping, and anything else gets a clear 400 error. Internal errors no longer reach the client and the server logs only the exception type." },
+            { "label": "Verification", "body": "I first wrote regression tests that reproduced the issue and failed; after the fix they all pass, and valid searches return exactly the same results as before." },
+            { "label": "Lesson", "body": "Language model output is untrusted input. No interpreted language, whether SQL, shell or Prolog, should be built by concatenating external text." }
+          ]
+        },
+        "results": [
+          "33 automated tests passing, including the injection regression tests, CORS and Azure configuration handling.",
+          "CORS off by default and limited to configured origins; Wikimedia Commons photos under free licenses with visible attribution.",
+          "The new queries return the same results as the old ones for the tested searches.",
+          "Runs in demo mode without credentials or network calls."
+        ],
+        "limits": [
+          "It isn't a visual classifier: only the photo's dominant color is used.",
+          "Searches with accents (for example, \"montaña\") still return no results because of how the fact base is encoded.",
+          "The demo runs locally; there's no public online version."
+        ]
+      }
+    },
+    {
+      "slug": "desercion-estudiantil",
+      "order": 4,
+      "featured": false,
+      "case": true,
+      "year": 2025,
+      "stack": ["Python", "pandas", "scikit-learn", "Power BI"],
+      "repo": "https://github.com/Eduardoleo/desercion-estudiantil-ml",
+      "es": {
+        "title": "Deserción estudiantil",
+        "kind": "Análisis de datos · Clasificación",
+        "summary": "Predicción temprana del abandono universitario con cuatro modelos comparados contra un baseline, un tablero en Power BI y una fuga de datos detectada y corregida.",
+        "cv": "Predicción del abandono universitario: 4 modelos contra un baseline, Power BI y una fuga corregida.",
+        "problem": "Una universidad puede ayudar a quien está por abandonar solo si lo detecta a tiempo. La pregunta del proyecto: con la información disponible al terminar el primer semestre, ¿se puede anticipar qué estudiantes abandonarán, seguirán matriculados o se graduarán, y qué factores pesan más?",
+        "role": "Desarrollo principal: limpieza y preparación de datos, modelos en Python y tablero de Power BI. Proyecto académico en equipo del curso Inteligencia Artificial Aplicada (UIA, 2025); los compañeros contribuyeron con correcciones puntuales.",
+        "solution": "Partí del conjunto público «Predict Students' Dropout and Academic Success» (UCI, CC BY 4.0), con 4.424 estudiantes de una institución de educación superior en Portugal. Limpié y preparé los datos, entrené cuatro clasificadores dentro de pipelines de scikit-learn y publiqué los resultados en un tablero de Power BI.",
+        "architecture": ["Dataset UCI", "Limpieza y preparación", "Pipeline + validación cruzada", "Comparación de modelos", "Tablero Power BI"],
+        "finding": {
+          "title": "Hallazgo: una fuga de datos inflaba las métricas",
+          "items": [
+            { "label": "Qué encontré", "body": "La primera versión reportaba un 79,5 % de accuracy, pero elegía los hiperparámetros mirando el conjunto de prueba, ajustaba el escalado fuera de la validación cruzada y usaba notas del segundo semestre para una predicción que debía hacerse antes." },
+            { "label": "Qué corregí", "body": "Fijé el horizonte (al terminar el primer semestre) y excluí las variables posteriores. El preprocesamiento quedó dentro de un pipeline y los hiperparámetros se eligen con validación cruzada estratificada solo sobre el entrenamiento. El conjunto de prueba se usa una sola vez, al final." },
+            { "label": "Resultado honesto", "body": "El mejor modelo (Random Forest, elegido por F1 macro en validación cruzada) logra un 72,8 % de accuracy y un F1 macro de 0,673 sobre 885 estudiantes de prueba, frente a 0,222 del baseline que siempre predice la clase más frecuente. Regresión logística y SVM quedan prácticamente empatados." },
+            { "label": "Por qué importa", "body": "Un número más bajo pero bien medido es el que sirve para decidir. La versión inflada habría prometido una precisión que el modelo no tiene con datos nuevos." }
+          ]
+        },
+        "decisions": [
+          { "title": "Comparar contra un baseline", "body": "Un clasificador que siempre predice «graduado» acierta la mitad de las veces. Medir contra esa referencia muestra cuánto aporta realmente cada modelo." },
+          { "title": "F1 macro en lugar de solo accuracy", "body": "Las tres clases no están equilibradas. El F1 macro y la accuracy balanceada penalizan a un modelo que ignora a los estudiantes que siguen matriculados." },
+          { "title": "Reproducible de punta a punta", "body": "Dependencias fijadas, rutas relativas, semillas fijas y errores con código de salida: dos ejecuciones seguidas producen exactamente las mismas métricas." }
+        ],
+        "results": [
+          "Random Forest: 72,8 % de accuracy, 67,4 % de accuracy balanceada y F1 macro de 0,673 en prueba, frente a 0,222 del baseline.",
+          "Recall por clase del modelo elegido: abandono 0,69, matriculado 0,50 y graduado 0,84.",
+          "7 pruebas automáticas, entre ellas una que garantiza que el modelo principal no usa variables del segundo semestre."
+        ],
+        "limits": [
+          "La clase «sigue matriculado» es la más difícil de predecir (recall de 0,50).",
+          "No se sabe con certeza en qué momento se registran dos de las variables más influyentes (matrícula al día y condición de deudor); si se actualizan después del primer semestre podría quedar una fuga residual.",
+          "Los datos provienen de una institución de Portugal; los resultados no se pueden trasladar sin más a otra universidad.",
+          "Los documentos internos del curso no se publican; el repositorio público incluye el código, las métricas y los gráficos."
+        ]
+      },
+      "en": {
+        "title": "Student dropout",
+        "kind": "Data analysis · Classification",
+        "summary": "Early prediction of university dropout with four models compared against a baseline, a Power BI dashboard and a data leak found and fixed.",
+        "cv": "University dropout prediction: 4 models against a baseline, Power BI and a data leak fixed.",
+        "problem": "A university can only help students about to drop out if it spots them in time. The project's question: with the information available at the end of the first semester, can we anticipate which students will drop out, stay enrolled or graduate, and which factors matter most?",
+        "role": "Lead developer: data cleaning and preparation, Python models and the Power BI dashboard. Team academic project for the course Inteligencia Artificial Aplicada (applied AI; UIA, 2025); teammates contributed specific fixes.",
+        "solution": "I started from the public \"Predict Students' Dropout and Academic Success\" dataset (UCI, CC BY 4.0), with 4,424 students from a higher-education institution in Portugal. I cleaned and prepared the data, trained four classifiers inside scikit-learn pipelines and published the results in a Power BI dashboard.",
+        "architecture": ["UCI dataset", "Cleaning and preparation", "Pipeline + cross-validation", "Model comparison", "Power BI dashboard"],
+        "finding": {
+          "title": "Finding: a data leak was inflating the metrics",
+          "items": [
+            { "label": "What I found", "body": "The first version reported 79.5% accuracy, but it tuned hyperparameters by looking at the test set, fitted scaling outside cross-validation and used second-semester grades for a prediction meant to happen earlier." },
+            { "label": "What I fixed", "body": "I set the prediction horizon (end of the first semester) and excluded later variables. Preprocessing now lives inside a pipeline and hyperparameters are chosen with stratified cross-validation on the training data only. The test set is used once, at the end." },
+            { "label": "Honest result", "body": "The best model (Random Forest, chosen by cross-validated macro F1) reaches 72.8% accuracy and 0.673 macro F1 on 885 test students, against 0.222 for the baseline that always predicts the most frequent class. Logistic regression and SVM are practically tied." },
+            { "label": "Why it matters", "body": "A lower but correctly measured number is the one you can make decisions with. The inflated version would have promised accuracy the model doesn't have on new data." }
+          ]
+        },
+        "decisions": [
+          { "title": "Compare against a baseline", "body": "A classifier that always predicts \"graduate\" is right half the time. Measuring against that reference shows how much each model really adds." },
+          { "title": "Macro F1, not just accuracy", "body": "The three classes are imbalanced. Macro F1 and balanced accuracy penalize a model that ignores students who remain enrolled." },
+          { "title": "Reproducible end to end", "body": "Pinned dependencies, relative paths, fixed seeds and proper exit codes: two consecutive runs produce exactly the same metrics." }
+        ],
+        "results": [
+          "Random Forest: 72.8% accuracy, 67.4% balanced accuracy and 0.673 macro F1 on the test set, against 0.222 for the baseline.",
+          "Per-class recall of the chosen model: dropout 0.69, enrolled 0.50 and graduate 0.84.",
+          "7 automated tests, including one that guarantees the main model uses no second-semester variables."
+        ],
+        "limits": [
+          "The \"still enrolled\" class is the hardest to predict (0.50 recall).",
+          "It isn't certain when two of the most influential variables (tuition up to date and debtor status) are recorded; if they're updated after the first semester, some leakage could remain.",
+          "The data comes from an institution in Portugal; the results don't transfer directly to another university.",
+          "Internal course documents aren't published; the public repository includes the code, metrics and charts."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+---
+import '@fontsource-variable/schibsted-grotesk';
+import '@fontsource-variable/atkinson-hyperlegible-next';
+import '@fontsource/atkinson-hyperlegible-mono/400.css';
+import '../styles/global.css';
+import profile from '../data/profile.json';
+import { ui, paths, type Lang } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  /** Ruta equivalente en el otro idioma (para el selector y hreflang). */
+  alternate: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+}
+
+const { title, description, lang, alternate, noindex = false, type = 'website' } = Astro.props;
+const t = ui[lang];
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const altHref = new URL(alternate, site).href;
+const esHref = lang === 'es' ? canonical : altHref;
+const enHref = lang === 'en' ? canonical : altHref;
+const fullTitle = title === profile.name ? title : `${title} | ${profile.name}`;
+const ogImage = new URL(`/og-${lang}.png`, site).href;
+const home = paths[lang].home;
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: profile.title[lang],
+  url: new URL(home, site).href,
+  address: { '@type': 'PostalAddress', addressLocality: 'San José', addressCountry: 'CR' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universidad Internacional de las Américas' },
+  sameAs: [profile.links.github, profile.links.linkedin],
+};
+---
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang="es-CR" href={esHref} />}
+    {!noindex && <link rel="alternate" hreflang="en" href={enHref} />}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={esHref} />}
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6f9" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d1626" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${profile.name}: ${profile.title[lang]}`} />
+    <meta property="og:locale" content={t.ogLocale} />
+    <meta property="og:locale:alternate" content={ui[other].ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    <script is:inline src="/theme-init.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#contenido">{t.skip}</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href={home}>
+          <span class="brand-mark" aria-hidden="true">{profile.initials}</span>
+          <span class="brand-name">{profile.name}</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">{t.menu}</button>
+        <div class="menu" id="menu">
+          <nav aria-label={t.navLabel}>
+            <ul>
+              <li><a href={`${home}#servicios`}>{t.nav.services}</a></li>
+              <li><a href={`${home}#proyectos`}>{t.nav.projects}</a></li>
+              <li><a href={`${home}#experiencia`}>{t.nav.experience}</a></li>
+              <li><a href={`${home}#sobre-mi`}>{t.nav.about}</a></li>
+              <li><a href={`${home}#contacto`}>{t.nav.contact}</a></li>
+            </ul>
+          </nav>
+          <div class="header-tools">
+            <a class="lang-switch" href={alternate} hreflang={other === 'es' ? 'es-CR' : 'en'} ><span lang={other === 'es' ? 'es-CR' : 'en'}>{t.switchLang}</span><span class="sr-only">: {t.switchLangLabel}</span></a>
+            <button class="theme-toggle" type="button" data-dark={t.themeToDark} data-light={t.themeToLight} aria-label={t.themeToDark}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <p class="footer-name">{profile.name}<br /><span>{profile.title[lang]}</span></p>
+        <ul class="footer-links">
+          <li><a href={paths[lang].privacy}>{t.footerPrivacy}</a></li>
+          <li><a href="/.well-known/security.txt">{t.footerSecurity}</a></li>
+          <li><a href={profile.links.github} rel="noopener noreferrer me" target="_blank">{t.github}<span class="sr-only"> {t.newTab}</span></a></li>
+          <li><a href={profile.links.linkedin} rel="noopener noreferrer me" target="_blank">{t.linkedin}<span class="sr-only"> {t.newTab}</span></a></li>
+        </ul>
+        <p class="footer-note">© {new Date().getFullYear()} {profile.name}. {t.footerNote}</p>
+      </div>
+    </footer>
+    <script>
+      const root = document.documentElement;
+      const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+      const sync = () => {
+        if (!toggle) return;
+        const dark = root.dataset.theme === 'dark';
+        toggle.setAttribute('aria-label', (dark ? toggle.dataset.light : toggle.dataset.dark) ?? '');
+        toggle.setAttribute('aria-pressed', String(dark));
+      };
+      sync();
+      toggle?.addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch {}
+        sync();
+      });
+
+      const menuBtn = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const menu = document.getElementById('menu');
+      menuBtn?.addEventListener('click', () => {
+        const open = menuBtn.getAttribute('aria-expanded') === 'true';
+        menuBtn.setAttribute('aria-expanded', String(!open));
+        menu?.classList.toggle('open', !open);
+      });
+      menu?.querySelectorAll('nav a').forEach((a) =>
+        a.addEventListener('click', () => {
+          menuBtn?.setAttribute('aria-expanded', 'false');
+          menu.classList.remove('open');
+        }),
+      );
+    </script>
+  </body>
+</html>

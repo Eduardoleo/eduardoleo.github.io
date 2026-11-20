@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import data from '../../data/projects.json';
+import { paths } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return data.projects.filter((p) => p.case).map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+const { project } = Astro.props;
+---
+<Layout lang="es" type="article" title={project.es.title} description={project.es.summary} alternate={paths.en.project(project.slug)}>
+  <CaseStudy lang="es" project={project} />
+</Layout>

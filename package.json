@@ -1,0 +1,25 @@
+{
+  "name": "portafolio-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "test": "playwright test",
+    "assets": "node scripts/generate-assets.mjs",
+    "assets:cv": "node scripts/generate-assets.mjs --cv"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.6",
+    "@fontsource-variable/atkinson-hyperlegible-next": "5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "5.3.0",
+    "@fontsource/atkinson-hyperlegible-mono": "5.3.0",
+    "astro": "7.4.13"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.1"
+  }
+}

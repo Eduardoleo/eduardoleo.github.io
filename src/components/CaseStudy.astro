@@ -1,0 +1,115 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { ui, paths, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; project: any }
+const { lang, project } = Astro.props;
+const t = ui[lang];
+const c = project[lang];
+const s = t.caseSections;
+const home = paths[lang].home;
+const short = { es: { finding: 'Hallazgo', security: 'Caso de seguridad' }, en: { finding: 'Finding', security: 'Security case' } }[lang];
+
+// Capturas: archivos en src/assets/proyectos/<slug>/, declarados en projects.json → screenshots.
+const assets = import.meta.glob<{ default: ImageMetadata }>('../assets/proyectos/*/*.{png,jpg,webp}', { eager: true });
+const shots = await Promise.all((project.screenshots ?? []).map(async (sh: any) => {
+  const mod = assets[`../assets/proyectos/${project.slug}/${sh.file}`];
+  if (!mod) throw new Error(`Captura no encontrada: ${project.slug}/${sh.file}`);
+  const full = await getImage({ src: mod.default, format: 'webp', width: Math.min(mod.default.width, 1440) });
+  return { src: mod.default, full: full.src, alt: sh[lang].alt, caption: sh[lang].caption };
+}));
+
+const sections: [string, string][] = [
+  ['problema', s.problem],
+  ['rol', s.role],
+  ['solucion', s.solution],
+  ...(shots.length ? [['capturas', s.screenshots] as [string, string]] : []),
+  ...(c.finding ? [['hallazgo', short.finding] as [string, string]] : []),
+  ['decisiones', s.decisions],
+  ...(c.security ? [['seguridad', short.security] as [string, string]] : []),
+  ['resultados', s.results],
+  ['alcance', s.limits],
+];
+---
+<article>
+  <header class="case-head">
+    <div class="wrap">
+      <a class="back" href={`${home}#proyectos`}>{t.backToProjects}</a>
+      <p class="project-kind">{c.kind} · {project.year}</p>
+      <h1>{c.title}</h1>
+      <p class="lead">{c.summary}</p>
+      <ul class="tags" aria-label="Stack">{project.stack.map((x: string) => <li>{x}</li>)}</ul>
+      {project.repo && <p class="case-links"><a class="button ghost" href={project.repo} rel="noopener">{t.viewCode}</a></p>}
+    </div>
+  </header>
+  <div class="wrap case-layout">
+    <nav class="case-index" aria-label={t.caseIndex}>
+      <p>{t.caseIndex}</p>
+      {sections.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+    </nav>
+    <div class="case-body">
+      <section id="problema" aria-labelledby="problema-t"><h2 id="problema-t">{s.problem}</h2><p>{c.problem}</p></section>
+      <section id="rol" aria-labelledby="rol-t"><h2 id="rol-t">{s.role}</h2><p>{c.role}</p></section>
+      <section id="solucion" aria-labelledby="solucion-t">
+        <h2 id="solucion-t">{s.solution}</h2>
+        <p>{c.solution}</p>
+        {c.architecture && <ol class="arch" aria-label={s.solution}>{c.architecture.map((a: string) => <li>{a}</li>)}</ol>}
+      </section>
+      {shots.length > 0 && (
+        <section id="capturas" aria-labelledby="capturas-t">
+          <h2 id="capturas-t">{s.screenshots}</h2>
+          <p class="shots-note">{t.screenshotsNote}</p>
+          <div class="shots">
+            {shots.map((sh: any) => (
+              <figure class="shot">
+                <a href={sh.full} aria-label={`${t.screenshotOpen}: ${sh.caption}`}>
+                  <Image src={sh.src} alt={sh.alt} width={720} format="webp" loading="lazy" decoding="async" />
+                </a>
+                <figcaption>{sh.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+      {c.finding && (
+        <section id="hallazgo" class="highlight-block" aria-labelledby="hallazgo-t">
+          <h2 id="hallazgo-t">{c.finding.title}</h2>
+          <dl class="findings">
+            {c.finding.items.map((it: any) => (<div><dt>{it.label}</dt><dd>{it.body}</dd></div>))}
+          </dl>
+        </section>
+      )}
+      <section id="decisiones" aria-labelledby="decisiones-t">
+        <h2 id="decisiones-t">{s.decisions}</h2>
+        {c.decisions.map((d: any) => (
+          <div class="decision"><h3>{d.title}</h3><p>{d.body}</p></div>
+        ))}
+      </section>
+      {c.security && (
+        <section id="seguridad" class="highlight-block" aria-labelledby="seguridad-t">
+          <h2 id="seguridad-t">{c.security.title}</h2>
+          <dl class="findings">
+            {c.security.items.map((it: any) => (<div><dt>{it.label}</dt><dd>{it.body}</dd></div>))}
+          </dl>
+        </section>
+      )}
+      <section id="resultados" aria-labelledby="resultados-t">
+        <h2 id="resultados-t">{s.results}</h2>
+        <ul class="checklist">{c.results.map((r: string) => <li>{r}</li>)}</ul>
+      </section>
+      <section id="alcance" aria-labelledby="alcance-t">
+        <h2 id="alcance-t">{s.limits}</h2>
+        <ul class="limits">{c.limits.map((l: string) => <li>{l}</li>)}</ul>
+      </section>
+      <div class="case-cta">
+        <h2>{t.caseContact}</h2>
+        <p>{t.caseContactBody}</p>
+        <p class="case-links">
+          <a class="button" href={`${home}#contacto`}>{t.nav.contact}</a>
+          {project.repo && <a class="button ghost" href={project.repo} rel="noopener">{t.viewCode}</a>}
+        </p>
+      </div>
+    </div>
+  </div>
+</article>

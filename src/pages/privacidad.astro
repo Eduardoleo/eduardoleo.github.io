@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import profile from '../data/profile.json';
+const updated = '18 de noviembre de 2026';
+---
+<Layout lang="es" title="Política de privacidad" description="Cómo trata Eduardo León Hernández los datos personales que recibe por este sitio, conforme a la Ley 8968 de Costa Rica." alternate="/en/privacy/">
+  <article class="wrap prose">
+    <h1>Política de privacidad</h1>
+    <p class="muted">Última actualización: {updated}</p>
+    <div class="notice"><p><strong>Plantilla pendiente de revisión.</strong> Este texto se redactó siguiendo la Ley 8968 de Protección de la Persona frente al Tratamiento de sus Datos Personales y su reglamento, pero no es asesoría legal y debe revisarlo una persona profesional en Derecho antes de considerarse definitivo.</p></div>
+
+    <h2>Responsable</h2>
+    <p>{profile.name}, persona física con domicilio en San José, Costa Rica, es responsable del tratamiento de los datos que se reciben por este sitio. Para cualquier consulta sobre privacidad, usa el <a href="/#contacto">formulario de contacto</a> o escribe por LinkedIn.</p>
+
+    <h2>Qué datos se recogen y para qué</h2>
+    <ul>
+      <li><strong>Formulario de contacto:</strong> nombre, correo electrónico y el mensaje que escribas. Se usan únicamente para responder tu consulta o preparar una cotización. No se usan para publicidad ni se venden o ceden a terceros.</li>
+      <li><strong>WhatsApp y LinkedIn:</strong> si eliges esos canales, sales de este sitio y la conversación se rige también por las políticas de Meta (WhatsApp) o LinkedIn.</li>
+      <li><strong>Navegación:</strong> este sitio no usa cookies, analítica, píxeles de seguimiento ni contenido incrustado de terceros. Las fuentes tipográficas se sirven desde el mismo sitio.</li>
+      <li><strong>Preferencia de tema:</strong> si cambias entre modo claro y oscuro, el navegador guarda esa elección en su almacenamiento local (<code>localStorage</code>). Ese dato nunca sale de tu dispositivo y puedes borrarlo desde la configuración del navegador.</li>
+    </ul>
+
+    <h2>Base de legitimación</h2>
+    <p>El tratamiento se basa en tu consentimiento informado, que otorgas al enviar el formulario después de leer esta política (artículo 5 de la Ley 8968). Puedes revocarlo en cualquier momento.</p>
+
+    <h2>Proveedores que intervienen</h2>
+    <ul>
+      <li><strong>Web3Forms</strong> recibe los datos del formulario y los reenvía a mi correo. Puede procesarlos fuera de Costa Rica.</li>
+      <li><strong>GitHub Pages</strong> (GitHub, Inc.) aloja el sitio. Como cualquier servidor web, puede registrar la dirección IP y datos técnicos de la visita por motivos de seguridad y operación, según su propia declaración de privacidad.</li>
+      <li><strong>Proveedor de correo electrónico</strong> en el que recibo y guardo los mensajes.</li>
+    </ul>
+    <p>Al usar estos servicios, tus datos pueden transferirse y almacenarse fuera de Costa Rica.</p>
+
+    <h2>Cuánto tiempo se conservan</h2>
+    <p>Los mensajes se conservan mientras dure la conversación y hasta 12 meses después del último contacto, salvo que exista una relación comercial que requiera conservarlos más tiempo. Después se eliminan.</p>
+
+    <h2>Tus derechos</h2>
+    <p>Puedes ejercer en cualquier momento tus derechos de acceso, rectificación y supresión (cancelación) de tus datos, así como revocar tu consentimiento. Para hacerlo, envía tu solicitud por el formulario de contacto indicando qué deseas. La respuesta se dará dentro de los plazos que establece la ley. Si consideras que tus derechos no fueron atendidos, puedes acudir a la Agencia de Protección de Datos de los Habitantes (PRODHAB).</p>
+
+    <h2>Seguridad</h2>
+    <p>El sitio se sirve solo por HTTPS, aplica una política de seguridad de contenido (CSP) que limita qué recursos pueden cargarse y no incluye scripts de terceros. Si encuentras un problema de seguridad, revisa el archivo <a href="/.well-known/security.txt">security.txt</a>.</p>
+
+    <h2>Menores de edad</h2>
+    <p>El sitio está dirigido a personas adultas y empresas. No se recogen intencionalmente datos de personas menores de edad.</p>
+
+    <h2>Cambios</h2>
+    <p>Si esta política cambia, se actualizará la fecha indicada arriba.</p>
+  </article>
+</Layout>

@@ -1,0 +1,12 @@
+# Política de divulgación / Disclosure policy
+# Si encuentras una vulnerabilidad en este sitio o en mis proyectos publicados,
+# repórtala de forma privada por el formulario de contacto. No publiques detalles
+# antes de que se corrija. No hay programa de recompensas.
+# If you find a vulnerability in this site or my published projects, report it
+# privately through the contact form. Please don't disclose details before a fix.
+Contact: https://eduardoleo.github.io/#contacto
+Contact: https://www.linkedin.com/in/eduardolh
+Expires: 2027-11-17T23:59:59.000Z
+Preferred-Languages: es, en
+Canonical: https://eduardoleo.github.io/.well-known/security.txt
+Policy: https://eduardoleo.github.io/privacidad/
