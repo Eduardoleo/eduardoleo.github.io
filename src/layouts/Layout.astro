@@ -87,6 +87,7 @@ const personLd = {
           <nav aria-label={t.navLabel}>
             <ul>
               <li><a href={`${home}#servicios`}>{t.nav.services}</a></li>
+              <li><a href={paths[lang].quote} aria-current={Astro.url.pathname === paths[lang].quote ? 'page' : undefined}>{t.nav.quote}</a></li>
               <li><a href={`${home}#proyectos`}>{t.nav.projects}</a></li>
               <li><a href={`${home}#experiencia`}>{t.nav.experience}</a></li>
               <li><a href={`${home}#sobre-mi`}>{t.nav.about}</a></li>

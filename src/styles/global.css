@@ -188,14 +188,34 @@ img, svg { max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .pipe-link .flow { animation: none; } }
 
-/* Servicios: filas, no tarjetas */
-.services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; counter-reset: svc; }
-.service { padding: 1.5rem 0 1.6rem; border-top: 1px solid var(--line); }
-.service h3 { margin-bottom: .45rem; }
-.service p { color: var(--muted); margin-bottom: .75rem; }
-.service .proof { font-size: .9rem; color: var(--ink); margin: 0; }
-.service .proof span { color: var(--muted); }
-@media (max-width: 48rem) { .services { grid-template-columns: 1fr; } }
+/* Servicios: dos líneas, cada una con sus paquetes */
+.line { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr); gap: 1.5rem clamp(2rem, 4vw, 3rem); padding-block: 2rem 2.5rem; border-top: 1px solid var(--line); }
+.line-tag { margin: 0 0 .4rem; font: 400 .85rem/1.3 var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+.line-head h3 { font-size: clamp(1.3rem, 1.1rem + .7vw, 1.6rem); margin-bottom: .6rem; }
+.line-problem { color: var(--muted); }
+.line-example { margin: 0; font-weight: 600; }
+.packages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.package {
+  display: flex; flex-direction: column; gap: .6rem; padding: 1.25rem;
+  border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--surface);
+}
+.package h4 { font: 650 1.1rem/1.25 var(--font-display); margin: 0; }
+.package p { margin: 0; }
+.package-includes { color: var(--muted); font-size: .95rem; }
+.package-meta { margin: 0; font-size: .92rem; }
+.package-meta div { display: flex; gap: .4rem; }
+.package-meta dt { color: var(--muted); }
+.package-meta dt::after { content: ':'; }
+.package-meta dd { margin: 0; font-weight: 600; }
+.package .package-price { margin-top: auto; padding-top: .6rem; border-top: 1px solid var(--line); font: 650 1.05rem/1.3 var(--font-display); }
+.package-cta { justify-content: center; }
+@media (max-width: 60rem) { .line { grid-template-columns: 1fr; } }
+@media (max-width: 48rem) { .packages { grid-template-columns: 1fr; } }
+.included { margin-top: 1rem; padding: clamp(1.25rem, 3vw, 2rem); border: 1.5px solid var(--accent); border-radius: var(--radius-m); background: var(--accent-soft); }
+.included ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 2.5rem; }
+.included h4 { font: 650 1.05rem/1.3 var(--font-display); margin: 0 0 .3rem; }
+.included p { margin: 0; font-size: .97rem; }
+@media (max-width: 48rem) { .included ul { grid-template-columns: 1fr; } }
 .quote-line { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
 .quote-line p { margin: 0; font: 600 1.05rem/1.4 var(--font-display); }
 
@@ -337,3 +357,39 @@ img, svg { max-width: 100%; }
 .not-found { min-height: 60vh; display: grid; align-content: center; padding-block: 4rem; }
 .not-found-en { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 .not-found .code { font: 700 clamp(5rem, 18vw, 10rem)/1 var(--font-display); color: var(--accent); letter-spacing: -.05em; margin: 0 0 1rem; }
+
+/* ==========================================================================
+   Calculadora de cotización
+   ========================================================================== */
+[hidden] { display: none !important; }
+.quote-page { padding-block: clamp(2.5rem, 6vw, 4.5rem); max-width: 52rem; }
+.quote-head { margin-bottom: 2rem; }
+.quote-head h1 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem); }
+.quote-calc { display: grid; gap: 1.5rem; }
+.step { margin: 0; padding: 1.25rem clamp(1rem, 3vw, 1.5rem) 1.5rem; border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--surface); min-width: 0; }
+.step legend { padding: 0 .4rem; font: 650 1.15rem/1.3 var(--font-display); }
+.step-n { display: inline-block; margin-right: .5rem; font: 400 .8rem/1.3 var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+.step-empty { margin: .5rem 0 0; color: var(--muted); }
+.choices { display: grid; gap: .6rem; margin-top: .75rem; }
+.choice {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem; align-items: start;
+  padding: .85rem 1rem; border: 1.5px solid var(--line); border-radius: var(--radius-s); background: var(--bg); cursor: pointer;
+}
+.choice:hover { border-color: var(--muted); }
+.choice:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.choice input { width: 1.2rem; height: 1.2rem; margin: .2rem 0 0; accent-color: var(--accent); }
+.choice-body { display: grid; gap: .2rem; }
+.choice-title { font-weight: 650; }
+.choice-desc { color: var(--muted); font-size: .95rem; }
+.choice-meta { color: var(--ink); font-size: .9rem; }
+.quote-result { padding: 1.25rem 1.5rem; border-left: 4px solid var(--accent); background: var(--soft); border-radius: 0 var(--radius-s) var(--radius-s) 0; }
+.quote-amount { margin: 0; font: 650 clamp(1.15rem, 1rem + .6vw, 1.4rem)/1.35 var(--font-display); }
+.quote-note { margin: .4rem 0 0; color: var(--muted); font-size: .95rem; }
+.quote-note:empty { display: none; }
+.quote-fallback h2 { font-size: 1.6rem; }
+.fallback-line { margin-top: 1.5rem; }
+.fallback-line ul { display: grid; gap: .75rem; }
+/* Con JavaScript se usa la calculadora; sin JavaScript, la lista de paquetes. */
+@media (scripting: enabled) { .quote-fallback { display: none; } }
+@media (scripting: none) { .quote-calc { display: none; } }
+.quote-fallback > p:last-child { margin-top: 1.5rem; }

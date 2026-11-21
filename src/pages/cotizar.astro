@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Quote from '../components/Quote.astro';
+import { ui } from '../i18n/ui';
+const t = ui.es.calc;
+---
+<Layout lang="es" title={t.title} description={t.description} alternate="/en/quote/">
+  <Quote lang="es" />
+</Layout>
