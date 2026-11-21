@@ -6,6 +6,7 @@ import profile from '../src/data/profile.json' with { type: 'json' };
 const cases = projects.projects.filter((p) => p.case).map((p) => p.slug);
 const pages = [
   '/', '/en/', '/privacidad/', '/en/privacy/', '/404.html',
+  '/cotizar/', '/en/quote/', '/cotizar/?linea=b&paquete=b-tienda', '/en/quote/?linea=a&paquete=a-sistema',
   ...cases.flatMap((s) => [`/proyectos/${s}/`, `/en/projects/${s}/`]),
 ];
 
@@ -60,7 +61,7 @@ const isWaUrl = (url: string, lang: 'es' | 'en') => {
 test('el número de WhatsApp no aparece en el HTML', async ({ request }) => {
   expect(waNumber).toMatch(/^506\d{8}$/);
   const local = waNumber.slice(3);
-  for (const p of ['/', '/en/']) {
+  for (const p of ['/', '/en/', '/cotizar/', '/en/quote/']) {
     const html = await (await request.get(p)).text();
     expect(html.includes(waNumber), p).toBe(false);
     expect(html.includes(local), p).toBe(false);
