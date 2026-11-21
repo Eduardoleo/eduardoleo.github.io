@@ -1,0 +1,199 @@
+{
+  "config": {
+    "moneda": "CRC",
+    "recargo_urgente_pct": "POR_DEFINIR"
+  },
+  "lineas": [
+    {
+      "id": "a",
+      "proyecto": "soporte-patitos",
+      "es": {
+        "nombre": "Automatización y reportes para pymes",
+        "problema": "Para cuando tu equipo pierde horas armando reportes a mano o copiando datos entre hojas de Excel."
+      },
+      "en": {
+        "nombre": "Automation and reporting for small businesses",
+        "problema": "For when your team loses hours building reports by hand or copying data between Excel sheets."
+      },
+      "paquetes": [
+        {
+          "id": "a-reporte",
+          "es": {
+            "nombre": "Reporte automático",
+            "incluye": "Un reporte que hoy se arma a mano (Excel, CSV o base de datos), generado y enviado solo por correo o carpeta compartida. Una fuente de datos.",
+            "plazo": "1–2 semanas"
+          },
+          "en": {
+            "nombre": "Automated report",
+            "incluye": "A report your team builds by hand today (from Excel, CSV or a database), generated and delivered on its own by email or to a shared folder. One data source.",
+            "plazo": "1–2 weeks"
+          },
+          "precio_desde": "POR_DEFINIR",
+          "precio_hasta": "POR_DEFINIR",
+          "extras": [
+            { "id": "a-reporte-fuente", "es": { "nombre": "Fuente de datos adicional" }, "en": { "nombre": "Additional data source" }, "precio": "POR_DEFINIR" },
+            { "id": "a-reporte-reporte", "es": { "nombre": "Reporte adicional con la misma fuente" }, "en": { "nombre": "Additional report from the same source" }, "precio": "POR_DEFINIR" }
+          ]
+        },
+        {
+          "id": "a-dashboard",
+          "es": {
+            "nombre": "Dashboard",
+            "incluye": "Panel con hasta 8 indicadores del negocio en Power BI o web, con actualización automática. Una fuente de datos.",
+            "plazo": "2–3 semanas"
+          },
+          "en": {
+            "nombre": "Dashboard",
+            "incluye": "A dashboard with up to 8 business metrics, in Power BI or on the web, that refreshes on its own. One data source.",
+            "plazo": "2–3 weeks"
+          },
+          "precio_desde": "POR_DEFINIR",
+          "precio_hasta": "POR_DEFINIR",
+          "extras": [
+            { "id": "a-dashboard-fuente", "es": { "nombre": "Fuente de datos adicional" }, "en": { "nombre": "Additional data source" }, "precio": "POR_DEFINIR" },
+            { "id": "a-dashboard-acceso", "es": { "nombre": "Acceso con usuario y contraseña" }, "en": { "nombre": "Username and password access" }, "precio": "POR_DEFINIR" }
+          ]
+        },
+        {
+          "id": "a-sistema",
+          "es": {
+            "nombre": "Sistema interno",
+            "incluye": "App web a la medida para un proceso (inventario, citas o personal), con login, hasta 3 roles y reportes básicos.",
+            "plazo": "4–8 semanas"
+          },
+          "en": {
+            "nombre": "Internal system",
+            "incluye": "A custom web app for one process (inventory, appointments or staff), with login, up to 3 roles and basic reports.",
+            "plazo": "4–8 weeks"
+          },
+          "precio_desde": "POR_DEFINIR",
+          "precio_hasta": "POR_DEFINIR",
+          "extras": [
+            { "id": "a-sistema-modulo", "es": { "nombre": "Módulo adicional" }, "en": { "nombre": "Additional module" }, "precio": "POR_DEFINIR" },
+            { "id": "a-sistema-exportar", "es": { "nombre": "Exportación a Excel o PDF" }, "en": { "nombre": "Export to Excel or PDF" }, "precio": "POR_DEFINIR" },
+            { "id": "a-sistema-migracion", "es": { "nombre": "Migración de datos existentes" }, "en": { "nombre": "Migration of existing data" }, "precio": "POR_DEFINIR" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "proyecto": "bellas-boutique",
+      "es": {
+        "nombre": "Sitios y tiendas en línea para pymes",
+        "problema": "Para cuando tus clientes te buscan en internet y no te encuentran, o todos tus pedidos llegan sueltos por mensajes."
+      },
+      "en": {
+        "nombre": "Websites and online stores for small businesses",
+        "problema": "For when customers look for you online and can't find you, or every order arrives scattered across messages."
+      },
+      "paquetes": [
+        {
+          "id": "b-sitio",
+          "es": {
+            "nombre": "Sitio de presentación",
+            "incluye": "Hasta 5 secciones, formulario de contacto, botón de WhatsApp, diseño adaptable a celular y configuración del dominio.",
+            "plazo": "1–2 semanas"
+          },
+          "en": {
+            "nombre": "Business website",
+            "incluye": "Up to 5 sections, a contact form, a WhatsApp button, a mobile-friendly design and domain setup.",
+            "plazo": "1–2 weeks"
+          },
+          "precio_desde": "POR_DEFINIR",
+          "precio_hasta": "POR_DEFINIR",
+          "extras": [
+            { "id": "b-sitio-seccion", "es": { "nombre": "Sección adicional" }, "en": { "nombre": "Additional section" }, "precio": "POR_DEFINIR" },
+            { "id": "b-sitio-ingles", "es": { "nombre": "Versión en inglés" }, "en": { "nombre": "English version" }, "precio": "POR_DEFINIR" },
+            { "id": "b-sitio-textos", "es": { "nombre": "Redacción de textos" }, "en": { "nombre": "Copywriting" }, "precio": "POR_DEFINIR" }
+          ]
+        },
+        {
+          "id": "b-catalogo",
+          "es": {
+            "nombre": "Catálogo con pedidos",
+            "incluye": "Hasta 50 productos con categorías, carrito y pedido enviado por WhatsApp, sin pago en línea. Panel simple para editar productos.",
+            "plazo": "2–3 semanas"
+          },
+          "en": {
+            "nombre": "Catalog with orders",
+            "incluye": "Up to 50 products with categories, a cart and orders sent by WhatsApp, without online payment. A simple panel to edit products.",
+            "plazo": "2–3 weeks"
+          },
+          "precio_desde": "POR_DEFINIR",
+          "precio_hasta": "POR_DEFINIR",
+          "extras": [
+            { "id": "b-catalogo-productos", "es": { "nombre": "Bloque de 50 productos más" }, "en": { "nombre": "Block of 50 more products" }, "precio": "POR_DEFINIR" },
+            { "id": "b-catalogo-ingles", "es": { "nombre": "Versión en inglés" }, "en": { "nombre": "English version" }, "precio": "POR_DEFINIR" }
+          ]
+        },
+        {
+          "id": "b-tienda",
+          "es": {
+            "nombre": "Tienda completa",
+            "incluye": "Catálogo, carrito, cuentas de cliente, panel de administración con inventario y pedidos, y comprobante de compra en PDF (no sustituye la factura electrónica de Hacienda).",
+            "plazo": "4–6 semanas"
+          },
+          "en": {
+            "nombre": "Full online store",
+            "incluye": "Catalog, cart, customer accounts, an admin panel with inventory and orders, and a PDF purchase receipt (not a replacement for Costa Rica's official electronic invoice).",
+            "plazo": "4–6 weeks"
+          },
+          "precio_desde": "POR_DEFINIR",
+          "precio_hasta": "POR_DEFINIR",
+          "extras": [
+            { "id": "b-tienda-pasarela", "es": { "nombre": "Pasarela de pago (se cotiza aparte)" }, "en": { "nombre": "Payment gateway (quoted separately)" }, "precio": "POR_DEFINIR" },
+            { "id": "b-tienda-migracion", "es": { "nombre": "Migración de productos" }, "en": { "nombre": "Product migration" }, "precio": "POR_DEFINIR" },
+            { "id": "b-tienda-ingles", "es": { "nombre": "Versión en inglés" }, "en": { "nombre": "English version" }, "precio": "POR_DEFINIR" }
+          ]
+        }
+      ]
+    }
+  ],
+  "incluido": [
+    {
+      "id": "seguridad",
+      "es": {
+        "titulo": "Seguridad desde el diseño",
+        "texto": "Validación de datos, contraseñas guardadas de forma segura y permisos por rol cuando el proyecto los usa, más una revisión de las fallas de seguridad más comunes (OWASP Top 10) antes de entregar."
+      },
+      "en": {
+        "titulo": "Security by design",
+        "texto": "Input validation, securely stored passwords and role-based permissions when the project uses them, plus a check against the most common security flaws (OWASP Top 10) before delivery."
+      }
+    },
+    {
+      "id": "codigo",
+      "es": {
+        "titulo": "Código entregado en tu GitHub",
+        "texto": "Al terminar, el código queda en un repositorio de GitHub a tu nombre, con instrucciones para instalarlo. Es tuyo y no dependes de mí para seguir."
+      },
+      "en": {
+        "titulo": "Code delivered to your GitHub",
+        "texto": "When we're done, the code lives in a GitHub repository under your name, with setup instructions. It's yours, and you don't depend on me to keep going."
+      }
+    },
+    {
+      "id": "capacitacion",
+      "es": {
+        "titulo": "Capacitación",
+        "texto": "Una sesión en línea de hasta 1 hora para aprender a usarlo, grabada para que la vuelvas a ver."
+      },
+      "en": {
+        "titulo": "Training",
+        "texto": "One online session of up to 1 hour to learn how to use it, recorded so you can watch it again."
+      }
+    },
+    {
+      "id": "ajustes",
+      "es": {
+        "titulo": "Ajustes",
+        "texto": "30 días de ajustes menores después de la entrega: corrección de errores y cambios de textos o imágenes. No incluye funciones nuevas, rediseños ni cambios de alcance."
+      },
+      "en": {
+        "titulo": "Adjustments",
+        "texto": "30 days of minor adjustments after delivery: bug fixes and changes to text or images. New features, redesigns and scope changes are not included."
+      }
+    }
+  ]
+}
