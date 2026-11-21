@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import projects from '../src/data/projects.json' with { type: 'json' };
+import profile from '../src/data/profile.json' with { type: 'json' };
 
 const cases = projects.projects.filter((p) => p.case).map((p) => p.slug);
 const pages = [
@@ -46,20 +47,104 @@ for (const path of pages) {
   });
 }
 
+// El número se decodifica en tiempo de ejecución: no se escribe en claro en el código de las pruebas.
+const waCode = profile.contact.whatsapp.code;
+const waNumber = Buffer.from(waCode, 'base64').toString('utf8').split('').reverse().join('');
+const waUrl = (lang: 'es' | 'en') => `https://wa.me/${waNumber}?text=${encodeURIComponent(profile.contact.whatsapp.message[lang])}`;
+// Compara por partes: el navegador puede normalizar la codificación (p. ej. ' → %27).
+const isWaUrl = (url: string, lang: 'es' | 'en') => {
+  const u = new URL(url);
+  return u.origin === 'https://wa.me' && u.pathname === `/${waNumber}` && u.searchParams.get('text') === profile.contact.whatsapp.message[lang];
+};
+
 test('el número de WhatsApp no aparece en el HTML', async ({ request }) => {
+  expect(waNumber).toMatch(/^506\d{8}$/);
+  const local = waNumber.slice(3);
   for (const p of ['/', '/en/']) {
     const html = await (await request.get(p)).text();
-    expect(html).not.toMatch(/7264\s?2232|50672642232/);
+    expect(html.includes(waNumber), p).toBe(false);
+    expect(html.includes(local), p).toBe(false);
+    expect(html.includes(`${local.slice(0, 4)} ${local.slice(4)}`), p).toBe(false);
   }
 });
 
-test('el enlace de WhatsApp se arma al interactuar', async ({ page }) => {
-  await page.goto('/');
-  const wa = page.locator('.hero .wa-link');
-  await expect(wa).toHaveAttribute('href', '#contacto');
-  await wa.hover();
-  await expect(wa).toHaveAttribute('href', /^https:\/\/wa\.me\/\d+\?text=/);
-  await expect(wa).toHaveAttribute('rel', /noopener/);
+test.describe('WhatsApp', () => {
+  // wa.me no se visita de verdad: se responde con una página vacía.
+  test.beforeEach(async ({ context }) => {
+    await context.route('https://wa.me/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>wa</title>' }));
+  });
+
+  for (const [path, lang] of [['/', 'es'], ['/en/', 'en']] as const) {
+    test(`ratón: se arma al pasar el cursor y abre wa.me en pestaña nueva (${lang})`, async ({ page, isMobile }) => {
+      test.skip(isMobile, 'sin cursor en móvil');
+      await page.goto(path);
+      const wa = page.locator('.hero .wa-link');
+      await expect(wa).toHaveAttribute('href', '#contacto');
+      await wa.hover();
+      const href = await wa.getAttribute('href');
+      expect(href!.startsWith('https://wa.me/506')).toBe(true);
+      expect(href).toBe(waUrl(lang));
+      expect(new URL(href!).searchParams.get('text')).toBe(profile.contact.whatsapp.message[lang]);
+      await expect(wa).toHaveAttribute('target', '_blank');
+      await expect(wa).toHaveAttribute('rel', /\bnoopener\b/);
+      const [popup] = await Promise.all([page.waitForEvent('popup'), wa.click()]);
+      expect(isWaUrl(popup.url(), lang)).toBe(true);
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+    });
+
+    test(`teclado: foco y Enter abren wa.me (${lang})`, async ({ page, isMobile }) => {
+      test.skip(isMobile, 'teclado solo en escritorio');
+      await page.goto(path);
+      const wa = page.locator('.channels .wa-link');
+      await wa.focus();
+      await expect(wa).toBeFocused();
+      await expect(wa).toHaveAttribute('href', waUrl(lang));
+      const [popup] = await Promise.all([page.waitForEvent('popup'), page.keyboard.press('Enter')]);
+      expect(isWaUrl(popup.url(), lang)).toBe(true);
+    });
+  }
+
+  test('toque en móvil: abre wa.me con el mensaje en español', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'solo móvil');
+    await page.goto('/');
+    const wa = page.locator('.hero .wa-link');
+    const [popup] = await Promise.all([page.waitForEvent('popup'), wa.tap()]);
+    expect(isWaUrl(popup.url(), 'es')).toBe(true);
+    await expect(wa).toHaveAttribute('target', '_blank');
+  });
+
+  test('sin JavaScript lleva a #contacto en la misma pestaña', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, baseURL: 'http://127.0.0.1:4322' });
+    const page = await context.newPage();
+    await page.goto('/');
+    const wa = page.locator('.hero .wa-link');
+    await expect(wa).toHaveAttribute('href', '#contacto');
+    await expect(wa).not.toHaveAttribute('target', /.+/);
+    await expect(wa.locator('[data-wa-newtab]')).toBeHidden();
+    await wa.click();
+    await expect(page).toHaveURL(/\/#contacto$/);
+    expect(context.pages()).toHaveLength(1);
+    await context.close();
+  });
+});
+
+test('URLs retiradas: redirigen sin JavaScript, noindex y fuera del sitemap', async ({ page, request }) => {
+  const retired = [
+    { path: '/proyectos/desercion-estudiantil/', to: '/#proyectos', canonical: 'https://eduardoleo.github.io/', lang: 'es-CR' },
+    { path: '/en/projects/desercion-estudiantil/', to: '/en/#proyectos', canonical: 'https://eduardoleo.github.io/en/', lang: 'en' },
+  ];
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+  for (const r of retired) {
+    const html = await (await request.get(r.path)).text();
+    expect(html).toContain(`<meta http-equiv="refresh" content="0; url=${r.to}">`);
+    expect(html).toContain('<meta name="robots" content="noindex">');
+    expect(html).toContain(`<link rel="canonical" href="${r.canonical}">`);
+    expect(html).toContain(`<html lang="${r.lang}">`);
+    expect(html).not.toMatch(/<script(?![^>]*\bsrc=)/);
+    expect(sitemap).not.toContain(r.path);
+    await page.goto(r.path);
+    await expect.poll(() => page.url()).toBe(new URL(r.to, page.url()).href);
+  }
 });
 
 test('SEO: canonical, hreflang, OG, sitemap, robots y security.txt', async ({ page, request }) => {
@@ -181,7 +266,6 @@ test('casos: enlace "Ver código en GitHub" al repo público de cada proyecto', 
     'soporte-patitos': 'soporte-patitos-rrhh',
     'bellas-boutique': 'bellas-boutique-tienda',
     'aves-costa-rica': 'aves-costa-rica-prolog',
-    'desercion-estudiantil': 'desercion-estudiantil-ml',
   };
   for (const [slug, repo] of Object.entries(repos)) {
     for (const [path, label] of [[`/proyectos/${slug}/`, 'Ver código en GitHub'], [`/en/projects/${slug}/`, 'View code on GitHub']]) {
