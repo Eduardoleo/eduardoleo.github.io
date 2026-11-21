@@ -22,88 +22,6 @@
     },
     "cv": { "enabled": true, "file": { "es": "/cv/eduardo-leon-hernandez-cv-es.pdf", "en": "/cv/eduardo-leon-hernandez-cv-en.pdf" } }
   },
-  "services": [
-    {
-      "id": "web-apps",
-      "es": {
-        "title": "Aplicaciones web a medida",
-        "body": "Paneles internos, tiendas en línea y sistemas de gestión con front end y back end, hechos a la medida de tu proceso.",
-        "proof": "Bellas Boutique · Soporte Patitos"
-      },
-      "en": {
-        "title": "Custom web applications",
-        "body": "Internal dashboards, online stores and management systems, front end and back end, built around how your business actually works.",
-        "proof": "Bellas Boutique · Soporte Patitos"
-      }
-    },
-    {
-      "id": "apis",
-      "es": {
-        "title": "APIs y bases de datos",
-        "body": "Diseño del modelo de datos, API REST y reglas de negocio aplicadas en el servidor, donde no se pueden saltar.",
-        "proof": "Soporte Patitos: back end completo y base de datos"
-      },
-      "en": {
-        "title": "APIs and databases",
-        "body": "Data model design, REST APIs and business rules enforced on the server, where they can't be bypassed.",
-        "proof": "Soporte Patitos: full back end and database"
-      }
-    },
-    {
-      "id": "automation",
-      "es": {
-        "title": "Automatización de procesos y reportes",
-        "body": "Scripts y tareas programadas que reemplazan trabajo manual repetitivo: cargas de datos, correcciones recurrentes y reportes que llegan solos.",
-        "proof": "Experiencia en Claro Costa Rica"
-      },
-      "en": {
-        "title": "Process automation and reporting",
-        "body": "Scripts and scheduled jobs that replace repetitive manual work: data loads, recurring fixes and reports that arrive on their own.",
-        "proof": "Experience at Claro Costa Rica"
-      }
-    },
-    {
-      "id": "data",
-      "es": {
-        "title": "Análisis de datos y dashboards",
-        "body": "Limpieza, consolidación y visualización de tus datos en Power BI, Excel o Python para decidir con información.",
-        "proof": "Claro Costa Rica"
-      },
-      "en": {
-        "title": "Data analysis and dashboards",
-        "body": "Cleaning, consolidating and visualizing your data in Power BI, Excel or Python so decisions rest on evidence.",
-        "proof": "Claro Costa Rica"
-      }
-    },
-    {
-      "id": "secure",
-      "es": {
-        "title": "Desarrollo seguro por diseño y hardening básico",
-        "body": "Permisos comprobados en el servidor, validación de entradas, límites de intentos, secretos fuera del código y cabeceras de seguridad.",
-        "proof": "Bellas Boutique · Aves de Costa Rica · este sitio",
-        "link": { "href": "/proyectos/aves-costa-rica/#seguridad", "label": "Ver el caso de seguridad en Aves de Costa Rica" }
-      },
-      "en": {
-        "title": "Secure-by-design development and basic hardening",
-        "body": "Server-side permission checks, input validation, rate limiting, secrets kept out of the code and security headers.",
-        "proof": "Bellas Boutique · Aves de Costa Rica · this site",
-        "link": { "href": "/en/projects/aves-costa-rica/#seguridad", "label": "Read the security case in Birds of Costa Rica" }
-      }
-    },
-    {
-      "id": "static-sites",
-      "es": {
-        "title": "Sitios web para pymes y profesionales",
-        "body": "Sitios rápidos, accesibles y sin rastreadores, fáciles de mantener y con hosting de bajo costo.",
-        "proof": "Este portafolio"
-      },
-      "en": {
-        "title": "Websites for small businesses and professionals",
-        "body": "Fast, accessible, tracker-free sites that are easy to maintain and cheap to host.",
-        "proof": "This portfolio"
-      }
-    }
-  ],
   "experience": [
     {
       "company": "Claro Costa Rica",
@@ -189,7 +107,7 @@
   ],
   "certifications": [],
   "skills": [
-    { "es": "Datos", "en": "Data", "items": ["Python (pandas, NumPy)", "SQL (Oracle, SQL Server)", "Power BI (DAX, Power Query)", "Excel", "scikit-learn"] },
+    { "es": "Datos", "en": "Data", "items": ["Python (pandas, NumPy)", "SQL (Oracle, SQL Server)", "Power BI (DAX, Power Query)", "Excel"] },
     { "es": "Web", "en": "Web", "items": ["JavaScript", "React", "Node.js / Express", "HTML / CSS", "Astro"] },
     { "es": "Back end", "en": "Back end", "items": ["C# / ASP.NET Core", "Entity Framework Core", "APIs REST", "MongoDB", "Git"] }
   ]

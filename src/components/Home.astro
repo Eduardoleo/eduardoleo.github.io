@@ -2,7 +2,9 @@
 import Pipeline from './Pipeline.astro';
 import profile from '../data/profile.json';
 import data from '../data/projects.json';
+import services from '../data/services.json';
 import { ui, paths, formatMonth, type Lang } from '../i18n/ui';
+import { priceValue, formatCRC } from '../scripts/pricing';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -15,6 +17,15 @@ const esc = (s: string) => s.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '
 // Resalta los porcentajes reales (67 %, 75 %) del texto de experiencia.
 const highlight = (s: string) => esc(s).replace(/(\d+\s?%)/g, '<strong>$1</strong>');
 const range = (start: string, end: string | null) => `${formatMonth(start, lang)} – ${end ? formatMonth(end, lang) : t.present}`;
+
+// Servicios (src/data/services.json): "Desde ₡X" o "Precio a consultar" si es POR_DEFINIR.
+const priceLabel = (v: unknown) => {
+  const n = priceValue(v);
+  return n === null ? t.priceOnRequest : `${t.priceFrom} ${formatCRC(n, lang)}`;
+};
+const projectTitle = (slug: string) => data.projects.find((p) => p.slug === slug)?.[lang].title ?? slug;
+// La calculadora lee la línea y el paquete de la URL (los mismos nombres de parámetro en ES y EN).
+const quoteHref = (line: string, pkg: string) => `${paths[lang].quote}?linea=${line}&paquete=${pkg}`;
 ---
 <section class="hero">
   <div class="wrap hero-grid">
@@ -43,19 +54,45 @@ const range = (start: string, end: string | null) => `${formatMonth(start, lang)
       <h2 id="servicios-t">{t.servicesTitle}</h2>
       <p>{t.servicesLead}</p>
     </div>
-    <ul class="services">
-      {profile.services.map((s) => (
-        <li class="service">
-          <h3>{s[lang].title}</h3>
-          <p>{s[lang].body}</p>
-          <p class="proof"><span>{t.proof}:</span> {s[lang].proof}</p>
-          {(s[lang] as any).link && <p class="proof-link"><a href={(s[lang] as any).link.href}>{(s[lang] as any).link.label}</a></p>}
-        </li>
-      ))}
-    </ul>
+    {services.lineas.map((line) => (
+      <article class="line" id={`linea-${line.id}`} aria-labelledby={`linea-${line.id}-t`}>
+        <div class="line-head">
+          <p class="line-tag">{t.lineLabel} {line.id.toUpperCase()}</p>
+          <h3 id={`linea-${line.id}-t`}>{line[lang].nombre}</h3>
+          <p class="line-problem">{line[lang].problema}</p>
+          <p class="line-example">
+            <a href={paths[lang].project(line.proyecto)}>{t.seeExample}<span class="sr-only">: {projectTitle(line.proyecto)}</span></a>
+          </p>
+        </div>
+        <ul class="packages">
+          {line.paquetes.map((pkg) => (
+            <li class="package" data-package={pkg.id}>
+              <h4>{pkg[lang].nombre}</h4>
+              <p class="package-includes"><span class="sr-only">{t.includes}: </span>{pkg[lang].incluye}</p>
+              <dl class="package-meta">
+                <div><dt>{t.term}</dt><dd>{pkg[lang].plazo}</dd></div>
+              </dl>
+              <p class="package-price">{priceLabel(pkg.precio_desde)}</p>
+              <a class="button ghost package-cta" href={quoteHref(line.id, pkg.id)} aria-label={`${t.quoteCta}: ${pkg[lang].nombre}`}>{t.quoteCta}</a>
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+    <div class="included">
+      <h3 id="incluido-t">{t.includedTitle}</h3>
+      <ul>
+        {services.incluido.map((inc) => (
+          <li>
+            <h4>{inc[lang].titulo}</h4>
+            <p>{inc[lang].texto}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
     <div class="quote-line">
       <p>{t.quote}</p>
-      <a class="button ghost" href="#contacto">{t.nav.contact}</a>
+      <a class="button ghost" href={paths[lang].quote}>{t.calcCta}</a>
     </div>
   </div>
 </section>

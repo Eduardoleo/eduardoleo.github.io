@@ -51,6 +51,9 @@ jobs:
       - name: Build limpio para publicar
         run: npm run build
 
+      - name: Enlaces internos del build
+        run: npm run check:links
+
       - name: Comprobar archivos clave
         run: |
           test -f dist/index.html

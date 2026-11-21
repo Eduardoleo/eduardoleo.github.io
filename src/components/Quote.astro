@@ -1,0 +1,145 @@
+---
+// Calculadora de cotización. Los datos salen de src/data/services.json; la lógica está en src/scripts/quote.ts.
+// Sin JavaScript se oculta el formulario (CSS: scripting) y se muestra la lista de paquetes con el enlace al formulario.
+import services from '../data/services.json';
+import profile from '../data/profile.json';
+import { ui, paths, type Lang } from '../i18n/ui';
+import { priceValue, formatCRC } from '../scripts/pricing';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const tq = t.calc;
+const pct = services.config.recargo_urgente_pct as unknown;
+const pctValue = priceValue(pct);
+const formHref = `${paths[lang].home}#contacto`;
+
+const fromLabel = (v: unknown) => {
+  const n = priceValue(v);
+  return n === null ? t.priceOnRequest : `${t.priceFrom} ${formatCRC(n, lang)}`;
+};
+const extraLabel = (v: unknown) => {
+  const n = priceValue(v);
+  return n === null ? t.priceOnRequest : `+${formatCRC(n, lang)}`;
+};
+const urgentLabel = pctValue === null ? tq.surchargePending : tq.surchargePct.replace('{pct}', String(pctValue));
+
+// Textos que necesita el script del navegador (resultado y mensaje de WhatsApp).
+const i18n = JSON.stringify({
+  pending: tq.pending, range: tq.range, rangePending: tq.rangePending, custom: tq.custom, note: tq.note, customNote: tq.customNote,
+  msg: tq.msg, msgNone: tq.msgNone, msgNormal: tq.msgNormal, msgUrgent: tq.msgUrgent,
+  msgRange: tq.msgRange, msgRangePending: tq.msgRangePending, msgCustom: tq.msgCustom,
+});
+---
+<div class="wrap quote-page">
+  <header class="quote-head">
+    <h1>{tq.title}</h1>
+    <p class="lead">{tq.lead}</p>
+  </header>
+
+  <form class="quote-calc" novalidate data-lang={lang} data-pct={String(pct)} data-i18n={i18n}>
+    <fieldset class="step">
+      <legend><span class="step-n">{tq.step} 1</span> {tq.stepLine}</legend>
+      <div class="choices">
+        {services.lineas.map((line) => (
+          <label class="choice">
+            <input type="radio" name="linea" value={line.id} data-name={line[lang].nombre} />
+            <span class="choice-body">
+              <span class="choice-title">{line[lang].nombre}</span>
+              <span class="choice-desc">{line[lang].problema}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset class="step">
+      <legend><span class="step-n">{tq.step} 2</span> {tq.stepPackage}</legend>
+      <p class="step-empty" data-empty="paquete">{tq.pickLineFirst}</p>
+      {services.lineas.map((line) => (
+        <div class="choices" data-pkg-group data-line={line.id} hidden>
+          {line.paquetes.map((pkg) => (
+            <label class="choice">
+              <input type="radio" name="paquete" value={pkg.id} data-line={line.id} data-name={pkg[lang].nombre}
+                data-desde={String(pkg.precio_desde)} data-hasta={String(pkg.precio_hasta)} />
+              <span class="choice-body">
+                <span class="choice-title">{pkg[lang].nombre}</span>
+                <span class="choice-desc">{pkg[lang].incluye}</span>
+                <span class="choice-meta">{t.term}: {pkg[lang].plazo} · {fromLabel(pkg.precio_desde)}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      ))}
+    </fieldset>
+
+    <fieldset class="step">
+      <legend><span class="step-n">{tq.step} 3</span> {tq.stepExtras}</legend>
+      <p class="step-empty" data-empty="extras">{tq.pickPackageFirst}</p>
+      {services.lineas.flatMap((line) => line.paquetes).map((pkg) => (
+        <div class="choices" data-extras-for={pkg.id} hidden>
+          {pkg.extras.map((ex) => (
+            <label class="choice">
+              <input type="checkbox" name="extra" value={ex.id} data-pkg={pkg.id} data-name={ex[lang].nombre} data-precio={String(ex.precio)} />
+              <span class="choice-body">
+                <span class="choice-title">{ex[lang].nombre}</span>
+                <span class="choice-meta">{extraLabel(ex.precio)}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      ))}
+    </fieldset>
+
+    <fieldset class="step">
+      <legend><span class="step-n">{tq.step} 4</span> {tq.stepTerm}</legend>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="plazo" value="normal" checked />
+          <span class="choice-body"><span class="choice-title">{tq.termNormal}</span><span class="choice-meta">{tq.termNormalHint}</span></span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="plazo" value="urgente" />
+          <span class="choice-body"><span class="choice-title">{tq.termUrgent}</span><span class="choice-meta">{urgentLabel}</span></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="quote-result" role="status" aria-live="polite" aria-atomic="true">
+      <p class="quote-amount">{tq.pending}</p>
+      <p class="quote-note"></p>
+    </div>
+
+    <div class="actions">
+      <a class="button quote-wa" data-wa={profile.contact.whatsapp.code} target="_blank" rel="noopener noreferrer" hidden>
+        {tq.sendWhatsapp}<span class="sr-only"> {t.newTab}</span>
+      </a>
+      <a class="button ghost" href={formHref}>{tq.preferForm}</a>
+    </div>
+  </form>
+
+  <section class="quote-fallback" aria-labelledby="paquetes-t">
+    <h2 id="paquetes-t">{tq.fallbackTitle}</h2>
+    <p>{tq.fallbackLead}</p>
+    {services.lineas.map((line) => (
+      <div class="fallback-line">
+        <h3>{line[lang].nombre}</h3>
+        <ul>
+          {line.paquetes.map((pkg) => (
+            <li class="package" data-package={pkg.id}>
+              <h4>{pkg[lang].nombre}</h4>
+              <p>{pkg[lang].incluye}</p>
+              <p class="choice-meta">{t.term}: {pkg[lang].plazo} · {fromLabel(pkg.precio_desde)}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+    <p><a class="button" href={formHref}>{tq.preferForm}</a></p>
+  </section>
+</div>
+
+<script>
+  import { initQuote } from '../scripts/quote';
+  initQuote();
+</script>
