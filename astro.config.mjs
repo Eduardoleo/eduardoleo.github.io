@@ -6,6 +6,9 @@ import sitemap from '@astrojs/sitemap';
 // Al conectar un dominio propio, cambiar `site` y el archivo public/CNAME.
 const site = 'https://eduardoleo.github.io';
 
+// URLs retiradas: páginas mínimas con meta refresh y noindex; no van al sitemap.
+const retired = ['/proyectos/desercion-estudiantil/', '/en/projects/desercion-estudiantil/'];
+
 export default defineConfig({
   site,
   output: 'static',
@@ -19,7 +22,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'es', locales: { es: 'es-CR', en: 'en' } },
-      filter: (page) => !page.includes('/404'),
+      filter: (page) => !page.includes('/404') && !retired.some((r) => page.endsWith(r)),
     }),
   ],
   build: { inlineStylesheets: 'never' },

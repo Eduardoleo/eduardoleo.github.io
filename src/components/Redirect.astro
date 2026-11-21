@@ -1,0 +1,30 @@
+---
+// Página mínima de redirección para URLs retiradas (sin JavaScript: la CSP usa hashes).
+// No se indexa (noindex) y se excluye del sitemap en astro.config.mjs.
+import { paths, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; to: string }
+const { lang, to } = Astro.props;
+const canonical = new URL(paths[lang].home, Astro.site).href;
+const t = {
+  es: { title: 'Esta página se movió', body: 'Este proyecto ya no forma parte del portafolio.', link: 'Ir a los proyectos' },
+  en: { title: 'This page has moved', body: 'This project is no longer part of the portfolio.', link: 'Go to the projects' },
+}[lang];
+---
+<!doctype html>
+<html lang={lang === 'es' ? 'es-CR' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.title}</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonical} />
+    <meta http-equiv="refresh" content={`0; url=${to}`} />
+  </head>
+  <body>
+    <main>
+      <h1>{t.title}</h1>
+      <p>{t.body} <a href={to}>{t.link}</a></p>
+    </main>
+  </body>
+</html>
