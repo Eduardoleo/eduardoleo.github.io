@@ -107,7 +107,7 @@
   ],
   "certifications": [],
   "skills": [
-    { "es": "Datos", "en": "Data", "items": ["Python (pandas, NumPy)", "SQL (Oracle, SQL Server)", "Power BI (DAX, Power Query)", "Excel", "scikit-learn"] },
+    { "es": "Datos", "en": "Data", "items": ["Python (pandas, NumPy)", "SQL (Oracle, SQL Server)", "Power BI (DAX, Power Query)", "Excel"] },
     { "es": "Web", "en": "Web", "items": ["JavaScript", "React", "Node.js / Express", "HTML / CSS", "Astro"] },
     { "es": "Back end", "en": "Back end", "items": ["C# / ASP.NET Core", "Entity Framework Core", "APIs REST", "MongoDB", "Git"] }
   ]
