@@ -1,8 +1,10 @@
 // Calculadora de cotización (/cotizar/ y /en/quote/). Todo ocurre en el navegador:
 // no hay backend, cookies ni almacenamiento. Solo se comparte algo si la persona abre WhatsApp.
+// Analítica (src/scripts/analytics.ts): solo el identificador del paquete elegido y el clic en WhatsApp.
 // Los precios se leen de los atributos data-* que Quote.astro genera desde services.json.
 import { buildWhatsAppUrl } from './whatsapp';
 import { estimate, formatCRC } from './pricing';
+import { trackQuotePackage, trackWhatsApp } from './analytics';
 
 type Lang = 'es' | 'en';
 const fill = (tpl: string, vals: Record<string, string>) => tpl.replace(/\{(\w+)\}/g, (_, k) => vals[k] ?? '');
@@ -50,7 +52,7 @@ export function initQuote(root: ParentNode = document): void {
       amount.textContent = T.pending;
       note.textContent = '';
       wa.hidden = true;
-      wa.removeAttribute('href');
+      wa.href = wa.dataset.fallback ?? '#';
       return;
     }
     const chosen = extras.filter((x) => x.checked && x.dataset.pkg === pkg.value);
@@ -88,11 +90,19 @@ export function initQuote(root: ParentNode = document): void {
       wa.hidden = false;
     } else {
       wa.hidden = true;
-      wa.removeAttribute('href');
+      wa.href = wa.dataset.fallback ?? '#';
     }
   }
 
-  form.addEventListener('change', sync);
+  form.addEventListener('change', (e) => {
+    sync();
+    const el = e.target as HTMLInputElement;
+    if (el.name === 'paquete' && el.checked) trackQuotePackage(el.value);
+  });
+  wa.addEventListener('click', () => {
+    const pkg = pkgs.find((p) => p.checked);
+    if (!wa.hidden && pkg) trackWhatsApp('calculadora', { paquete: pkg.value, urgente: !!urgentInput?.checked });
+  });
   form.addEventListener('submit', (e) => e.preventDefault());
   sync();
 }

@@ -1,10 +1,18 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { SITE_URL } from './site.config.mjs';
 
-// Primera publicación: sitio de usuario de GitHub Pages (repo Eduardoleo.github.io → base '/').
-// Al conectar un dominio propio, cambiar `site` y el archivo public/CNAME.
-const site = 'https://eduardoleo.github.io';
+// Dominio propio (nov. 2026). El repo sigue siendo Eduardoleo/eduardoleo.github.io y se publica con
+// GitHub Actions (deploy-pages): el dominio se configura en Settings > Pages y NO hace falta public/CNAME
+// (con un workflow propio GitHub ignora ese archivo).
+const site = SITE_URL;
+
+// Analítica sin cookies (Simple Analytics). Dominios según https://docs.simpleanalytics.com/csp
+// El script solo se incluye si PUBLIC_ANALYTICS=true (lo define el paso de publicación del workflow);
+// nunca en desarrollo ni en las pruebas. La CSP permite los dominios siempre, para que sea la misma en todos los builds.
+const SA_SCRIPTS = 'https://scripts.simpleanalyticscdn.com';
+const SA_QUEUE = 'https://queue.simpleanalyticscdn.com';
 
 // URLs retiradas: páginas mínimas con meta refresh y noindex; no van al sitemap.
 const retired = ['/proyectos/desercion-estudiantil/', '/en/projects/desercion-estudiantil/'];
@@ -26,14 +34,17 @@ export default defineConfig({
     }),
   ],
   build: { inlineStylesheets: 'never' },
+  // Los videos de los casos nunca se incrustan como data: (media-src solo permite 'self').
+  vite: { build: { assetsInlineLimit: (file) => (/\.(mp4|webm)$/.test(file) ? false : undefined) } },
   security: {
     csp: {
       algorithm: 'SHA-256',
       directives: [
         "default-src 'self'",
-        "img-src 'self' data:",
+        `img-src 'self' data: ${SA_QUEUE}`,
+        "media-src 'self'",
         "font-src 'self'",
-        "connect-src 'self' https://api.web3forms.com",
+        `connect-src 'self' https://api.web3forms.com ${SA_QUEUE}`,
         "form-action https://api.web3forms.com",
         "base-uri 'self'",
         "object-src 'none'",
@@ -42,6 +53,8 @@ export default defineConfig({
         "manifest-src 'self'",
         'upgrade-insecure-requests',
       ],
+      // Astro agrega a script-src los hashes de sus scripts; aquí solo se suma el CDN del script de analítica.
+      scriptDirective: { resources: ["'self'", SA_SCRIPTS] },
     },
   },
 });

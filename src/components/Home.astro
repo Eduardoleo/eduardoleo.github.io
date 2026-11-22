@@ -253,6 +253,7 @@ const quoteHref = (line: string, pkg: string) => `${paths[lang].quote}?linea=${l
 
 <script>
   import { initWhatsAppLinks } from '../scripts/whatsapp';
+  import { trackContactSent } from '../scripts/analytics';
 
   // WhatsApp: el número no está en el HTML; se arma al interactuar (ver src/scripts/whatsapp.ts).
   initWhatsAppLinks();
@@ -293,6 +294,7 @@ const quoteHref = (line: string, pkg: string) => `${paths[lang].quote}?linea=${l
         form.reset();
         status.dataset.state = 'ok';
         status.textContent = form.dataset.ok ?? '';
+        trackContactSent();
       } catch {
         status.dataset.state = 'error';
         status.textContent = form.dataset.error ?? '';

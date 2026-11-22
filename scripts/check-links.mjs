@@ -4,6 +4,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { SITE_URL } from '../site.config.mjs';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 if (!existsSync(dist)) { console.error('No existe dist/. Ejecuta antes npm run build.'); process.exit(1); }
@@ -36,6 +37,10 @@ for (const page of pages) {
     if (!link || /^(mailto:|tel:|data:|javascript:)/.test(link)) continue;
     if (/^https?:\/\//.test(link)) {
       if (link.startsWith('https://eduardoleo.github.io/')) {
+        // Dominio anterior: ya no debe aparecer en ningún enlace del sitio.
+        checked++;
+        errors.push(`${from}: ${link} → usa el dominio anterior (ahora ${SITE_URL})`);
+      } else if (link.startsWith(`${SITE_URL}/`)) {
         // Canonical, hreflang y OG: deben existir en el propio build.
         const u = new URL(link);
         checked++;

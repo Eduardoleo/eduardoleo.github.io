@@ -27,6 +27,10 @@ const enHref = lang === 'en' ? canonical : altHref;
 const fullTitle = title === profile.name ? title : `${title} | ${profile.name}`;
 const ogImage = new URL(`/og-${lang}.png`, site).href;
 const home = paths[lang].home;
+// Analítica sin cookies (Simple Analytics, https://docs.simpleanalytics.com/script): solo en el build de publicación
+// (PUBLIC_ANALYTICS=true en el workflow), nunca en dev ni en pruebas. Script externo, sin cookies y respeta Do Not Track
+// por defecto. Sin <noscript> con píxel: su documentación lo desaconseja porque cuenta sobre todo robots.
+const analytics = import.meta.env.PROD && import.meta.env.PUBLIC_ANALYTICS === 'true';
 
 const personLd = {
   '@context': 'https://schema.org',
@@ -148,5 +152,6 @@ const personLd = {
         }),
       );
     </script>
+    {analytics && <script is:inline async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>}
   </body>
 </html>

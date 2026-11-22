@@ -343,6 +343,9 @@ img, svg { max-width: 100%; }
 .shot a:hover { border-color: var(--accent); }
 .shot img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
 .shot figcaption { margin-top: .5rem; font-size: .88rem; color: var(--muted); }
+.demo-video { margin-top: 1.25rem; max-width: 52rem; }
+.demo-video video { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--surface); }
+.video-desc { display: block; margin-top: .25rem; }
 .case-cta { padding: 2rem; border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--surface); }
 .case-links { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.25rem; }
 @media (max-width: 52rem) { .case-layout { grid-template-columns: 1fr; } .case-index { position: static; } }

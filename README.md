@@ -40,6 +40,6 @@ npm.cmd run assets:cv    # además genera el CV público: PDF en public/cv/ y vi
 
 ## Publicación
 
-GitHub Pages como sitio de usuario (`https://eduardoleo.github.io`, `site` en `astro.config.mjs`). No se publica sin aprobación del propietario.
+GitHub Pages con GitHub Actions y dominio propio: `https://eduardoleon.dev` (`SITE_URL` en `site.config.mjs`). El repo se llama `eduardoleo.github.io`, y esa dirección redirige al dominio. El dominio se configura en Settings > Pages; con un workflow propio no hace falta un archivo `CNAME`. No se publica sin aprobación del propietario.
 
 Todos los derechos reservados.

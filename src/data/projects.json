@@ -9,6 +9,10 @@
       "year": 2026,
       "stack": ["C#", "ASP.NET Core 10", "Entity Framework Core", "SQL Server", "JWT", "React", "Vite"],
       "repo": "https://github.com/Eduardoleo/soporte-patitos-rrhh",
+      "media_note": {
+        "es": "Tomadas en local sobre la base demo: todos los nombres, cédulas y montos son ficticios.",
+        "en": "Taken locally on the demo database: every name, ID and amount is fictitious. The app interface is in Spanish."
+      },
       "screenshots": [
         { "file": "soporte-01-login.png",
           "es": { "caption": "Inicio de sesión", "alt": "Pantalla de inicio de sesión de Soporte Patitos con campos de correo empresarial y contraseña." },
@@ -91,6 +95,8 @@
       "year": 2025,
       "stack": ["React", "Vite", "Node.js", "Express", "SQLite", "JWT"],
       "repo": "https://github.com/Eduardoleo/bellas-boutique-tienda",
+      "screenshots": [],
+      "video": null,
       "es": {
         "title": "Bellas Boutique",
         "kind": "Full stack · Comercio electrónico",
@@ -156,6 +162,8 @@
       "year": 2025,
       "stack": ["Python", "Flask", "Prolog", "Azure OpenAI"],
       "repo": "https://github.com/Eduardoleo/aves-costa-rica-prolog",
+      "screenshots": [],
+      "video": null,
       "es": {
         "title": "Aves de Costa Rica",
         "kind": "Python · Base de conocimiento e IA",

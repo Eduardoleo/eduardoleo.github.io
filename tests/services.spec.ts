@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import services from '../src/data/services.json' with { type: 'json' };
 import projects from '../src/data/projects.json' with { type: 'json' };
+import { SITE_URL } from '../site.config.mjs';
 import { validateServices, formatCRC, estimate, POR_DEFINIR } from '../src/scripts/pricing';
 
 type Lang = 'es' | 'en';
@@ -278,8 +279,8 @@ test('sin desbordes a 360 px', async ({ browser }) => {
 
 test('la calculadora está en el sitemap y enlazada entre idiomas', async ({ page, request }) => {
   const sitemap = await (await request.get('/sitemap-0.xml')).text();
-  expect(sitemap).toContain('https://eduardoleo.github.io/cotizar/');
-  expect(sitemap).toContain('https://eduardoleo.github.io/en/quote/');
+  expect(sitemap).toContain(`${SITE_URL}/cotizar/`);
+  expect(sitemap).toContain(`${SITE_URL}/en/quote/`);
   await page.goto('/cotizar/');
-  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', 'https://eduardoleo.github.io/en/quote/');
+  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', `${SITE_URL}/en/quote/`);
 });

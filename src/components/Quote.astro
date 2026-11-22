@@ -111,7 +111,7 @@ const i18n = JSON.stringify({
     </div>
 
     <div class="actions">
-      <a class="button quote-wa" data-wa={profile.contact.whatsapp.code} target="_blank" rel="noopener noreferrer" hidden>
+      <a class="button quote-wa" href={formHref} data-fallback={formHref} data-wa={profile.contact.whatsapp.code} target="_blank" rel="noopener noreferrer" hidden>
         {tq.sendWhatsapp}<span class="sr-only"> {t.newTab}</span>
       </a>
       <a class="button ghost" href={formHref}>{tq.preferForm}</a>
