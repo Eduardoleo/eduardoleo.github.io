@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
+import { SITE_URL } from '../site.config.mjs';
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const projects = JSON.parse(readFileSync(join(root, 'src/data/projects.json'), 'utf8')).projects.sort((a, b) => a.order - b.order);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -24,7 +26,7 @@ const T = {
 
 export function cvHtml(p, lang, fonts) {
   const t = T[lang];
-  const site = lang === 'es' ? 'https://eduardoleo.github.io/' : 'https://eduardoleo.github.io/en/';
+  const site = lang === 'es' ? `${SITE_URL}/` : `${SITE_URL}/en/`;
   const siteText = site.replace('https://', '').replace(/\/$/, '');
   const exp = p.experience.map((j) => `
     <div class="item"><div class="row"><h3>${esc(j[lang].role)} · ${esc(j.company)}</h3><span>${fm(j.start, lang)} – ${j.end ? fm(j.end, lang) : t.present}</span></div>

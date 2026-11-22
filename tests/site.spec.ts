@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import projects from '../src/data/projects.json' with { type: 'json' };
+import { SITE_URL } from '../site.config.mjs';
 import profile from '../src/data/profile.json' with { type: 'json' };
 
 const cases = projects.projects.filter((p) => p.case).map((p) => p.slug);
@@ -131,8 +132,8 @@ test.describe('WhatsApp', () => {
 
 test('URLs retiradas: redirigen sin JavaScript, noindex y fuera del sitemap', async ({ page, request }) => {
   const retired = [
-    { path: '/proyectos/desercion-estudiantil/', to: '/#proyectos', canonical: 'https://eduardoleo.github.io/', lang: 'es-CR' },
-    { path: '/en/projects/desercion-estudiantil/', to: '/en/#proyectos', canonical: 'https://eduardoleo.github.io/en/', lang: 'en' },
+    { path: '/proyectos/desercion-estudiantil/', to: '/#proyectos', canonical: `${SITE_URL}/`, lang: 'es-CR' },
+    { path: '/en/projects/desercion-estudiantil/', to: '/en/#proyectos', canonical: `${SITE_URL}/en/`, lang: 'en' },
   ];
   const sitemap = await (await request.get('/sitemap-0.xml')).text();
   for (const r of retired) {
@@ -150,8 +151,8 @@ test('URLs retiradas: redirigen sin JavaScript, noindex y fuera del sitemap', as
 
 test('SEO: canonical, hreflang, OG, sitemap, robots y security.txt', async ({ page, request }) => {
   await page.goto('/');
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://eduardoleo.github.io/');
-  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', 'https://eduardoleo.github.io/en/');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${SITE_URL}/`);
+  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', `${SITE_URL}/en/`);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-es\.png$/);
   for (const f of ['/sitemap-index.xml', '/robots.txt', '/.well-known/security.txt', '/og-es.png', '/og-en.png', '/favicon.ico', '/favicon.svg', '/apple-touch-icon.png']) {
     expect((await request.get(f)).status(), f).toBe(200);

@@ -1,10 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { SITE_URL } from './site.config.mjs';
 
-// Primera publicación: sitio de usuario de GitHub Pages (repo Eduardoleo.github.io → base '/').
-// Al conectar un dominio propio, cambiar `site` y el archivo public/CNAME.
-const site = 'https://eduardoleo.github.io';
+// Dominio propio (nov. 2026). El repo sigue siendo Eduardoleo/eduardoleo.github.io y se publica con
+// GitHub Actions (deploy-pages): el dominio se configura en Settings > Pages y NO hace falta public/CNAME
+// (con un workflow propio GitHub ignora ese archivo).
+const site = SITE_URL;
 
 // URLs retiradas: páginas mínimas con meta refresh y noindex; no van al sitemap.
 const retired = ['/proyectos/desercion-estudiantil/', '/en/projects/desercion-estudiantil/'];
