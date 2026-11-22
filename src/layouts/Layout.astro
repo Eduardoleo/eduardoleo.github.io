@@ -3,6 +3,9 @@ import '@fontsource-variable/schibsted-grotesk';
 import '@fontsource-variable/atkinson-hyperlegible-next';
 import '@fontsource/atkinson-hyperlegible-mono/400.css';
 import '../styles/global.css';
+// Precarga de las dos fuentes del primer render (titular y texto): evita el salto de diseño (CLS) al cambiar de fuente.
+import fontDisplayUrl from '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url';
+import fontBodyUrl from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
 import profile from '../data/profile.json';
 import { ui, paths, type Lang } from '../i18n/ui';
 
@@ -48,6 +51,8 @@ const personLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={fontDisplayUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontBodyUrl} as="font" type="font/woff2" crossorigin />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content={profile.name} />
