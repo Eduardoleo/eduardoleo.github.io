@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { ui, paths, type Lang } from '../i18n/ui';
 
@@ -11,20 +11,50 @@ const s = t.caseSections;
 const home = paths[lang].home;
 const short = { es: { finding: 'Hallazgo', security: 'Caso de seguridad' }, en: { finding: 'Finding', security: 'Security case' } }[lang];
 
-// Capturas: archivos en src/assets/proyectos/<slug>/, declarados en projects.json → screenshots.
-const assets = import.meta.glob<{ default: ImageMetadata }>('../assets/proyectos/*/*.{png,jpg,webp}', { eager: true });
+// Medios del caso: archivos en src/assets/proyectos/<slug>/, declarados en projects.json.
+// - screenshots: [{ file, es/en: { alt, caption } }] → <Picture> AVIF + WebP, con width/height y carga diferida.
+// - video: { mp4, webm?, poster, es/en: { caption, description } } → <video> silenciado, con controles y póster.
+// - media_note: { es, en } opcional, aclaración sobre los datos que se ven (p. ej. que son ficticios).
+// Si no hay capturas ni video, la sección no se genera (sin huecos).
+const assets = import.meta.glob<{ default: ImageMetadata }>('../assets/proyectos/*/*.{png,jpg,jpeg,webp,avif}', { eager: true });
+const videos = import.meta.glob<string>('../assets/proyectos/*/*.{mp4,webm}', { eager: true, query: '?url', import: 'default' });
+const findAsset = (file: string) => {
+  const mod = assets[`../assets/proyectos/${project.slug}/${file}`];
+  if (!mod) throw new Error(`Imagen no encontrada: ${project.slug}/${file}`);
+  return mod.default;
+};
 const shots = await Promise.all((project.screenshots ?? []).map(async (sh: any) => {
-  const mod = assets[`../assets/proyectos/${project.slug}/${sh.file}`];
-  if (!mod) throw new Error(`Captura no encontrada: ${project.slug}/${sh.file}`);
-  const full = await getImage({ src: mod.default, format: 'webp', width: Math.min(mod.default.width, 1440) });
-  return { src: mod.default, full: full.src, alt: sh[lang].alt, caption: sh[lang].caption };
+  const src = findAsset(sh.file);
+  const full = await getImage({ src, format: 'webp', width: Math.min(src.width, 1440) });
+  return { src, full: full.src, alt: sh[lang].alt, caption: sh[lang].caption };
 }));
+let video: null | { mp4: string; webm?: string; poster: string; width: number; height: number; caption: string; description: string } = null;
+if (project.video) {
+  const v = project.video;
+  const url = (file: string) => {
+    const u = videos[`../assets/proyectos/${project.slug}/${file}`];
+    if (!u) throw new Error(`Video no encontrado: ${project.slug}/${file}`);
+    return u;
+  };
+  const posterSrc = findAsset(v.poster);
+  const poster = await getImage({ src: posterSrc, format: 'webp', width: Math.min(posterSrc.width, 1280) });
+  video = {
+    mp4: url(v.mp4),
+    webm: v.webm ? url(v.webm) : undefined,
+    poster: poster.src,
+    width: posterSrc.width,
+    height: posterSrc.height,
+    caption: v[lang].caption,
+    description: v[lang].description,
+  };
+}
+const hasMedia = shots.length > 0 || video !== null;
 
 const sections: [string, string][] = [
   ['problema', s.problem],
   ['rol', s.role],
   ['solucion', s.solution],
-  ...(shots.length ? [['capturas', s.screenshots] as [string, string]] : []),
+  ...(hasMedia ? [['capturas', s.screenshots] as [string, string]] : []),
   ...(c.finding ? [['hallazgo', short.finding] as [string, string]] : []),
   ['decisiones', s.decisions],
   ...(c.security ? [['seguridad', short.security] as [string, string]] : []),
@@ -56,20 +86,31 @@ const sections: [string, string][] = [
         <p>{c.solution}</p>
         {c.architecture && <ol class="arch" aria-label={s.solution}>{c.architecture.map((a: string) => <li>{a}</li>)}</ol>}
       </section>
-      {shots.length > 0 && (
+      {hasMedia && (
         <section id="capturas" aria-labelledby="capturas-t">
           <h2 id="capturas-t">{s.screenshots}</h2>
-          <p class="shots-note">{t.screenshotsNote}</p>
-          <div class="shots">
-            {shots.map((sh: any) => (
-              <figure class="shot">
-                <a href={sh.full} aria-label={`${t.screenshotOpen}: ${sh.caption}`}>
-                  <Image src={sh.src} alt={sh.alt} width={720} format="webp" loading="lazy" decoding="async" />
-                </a>
-                <figcaption>{sh.caption}</figcaption>
-              </figure>
-            ))}
-          </div>
+          {project.media_note?.[lang] && <p class="shots-note">{project.media_note[lang]}</p>}
+          {shots.length > 0 && (
+            <div class="shots">
+              {shots.map((sh: any) => (
+                <figure class="shot">
+                  <a href={sh.full} aria-label={`${t.screenshotOpen}: ${sh.caption}`}>
+                    <Picture src={sh.src} alt={sh.alt} width={720} formats={['avif', 'webp']} fallbackFormat="webp" loading="lazy" decoding="async" />
+                  </a>
+                  <figcaption>{sh.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+          {video && (
+            <figure class="shot demo-video">
+              <video controls muted playsinline preload="none" poster={video.poster} width={video.width} height={video.height} aria-describedby="video-desc">
+                {video.webm && <source src={video.webm} type="video/webm" />}
+                <source src={video.mp4} type="video/mp4" />
+              </video>
+              <figcaption>{video.caption}<span id="video-desc" class="video-desc">{video.description}</span></figcaption>
+            </figure>
+          )}
         </section>
       )}
       {c.finding && (

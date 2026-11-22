@@ -34,12 +34,15 @@ export default defineConfig({
     }),
   ],
   build: { inlineStylesheets: 'never' },
+  // Los videos de los casos nunca se incrustan como data: (media-src solo permite 'self').
+  vite: { build: { assetsInlineLimit: (file) => (/\.(mp4|webm)$/.test(file) ? false : undefined) } },
   security: {
     csp: {
       algorithm: 'SHA-256',
       directives: [
         "default-src 'self'",
         `img-src 'self' data: ${SA_QUEUE}`,
+        "media-src 'self'",
         "font-src 'self'",
         `connect-src 'self' https://api.web3forms.com ${SA_QUEUE}`,
         "form-action https://api.web3forms.com",

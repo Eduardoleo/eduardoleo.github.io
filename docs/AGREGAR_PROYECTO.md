@@ -16,6 +16,12 @@ Todo el contenido de los proyectos vive en `src/data/projects.json`. No hace fal
    - `architecture`: lista de pasos.
    - `finding`: hallazgo, con `{ "title", "items": [{ "label", "body" }] }`.
    - `security`: caso de seguridad, con la misma forma.
+   Medios (opcionales; si faltan, la sección "Capturas" no aparece):
+   - Archivos en `src/assets/proyectos/<slug>/` (PNG, JPG, WebP o AVIF; el build genera AVIF + WebP con `width`, `height` y `loading="lazy"`).
+   - `screenshots`: 2 o 3 objetos `{ "file", "es": { "alt", "caption" }, "en": { "alt", "caption" } }`. El `alt` describe lo que se ve, no solo el título.
+   - `video`: animación corta **en mp4 (y opcionalmente webm), sin audio**, en lugar de un GIF. Forma: `{ "mp4", "webm", "poster", "es": { "caption", "description" }, "en": { … } }`. `poster` es una imagen de la misma carpeta y define el ancho y alto. Se muestra silenciado, con controles y sin reproducción automática; `description` es el texto alternativo de lo que pasa en el video.
+   - `media_note`: `{ "es", "en" }` opcional, p. ej. para aclarar que los datos son ficticios.
+   - Solo datos ficticios en las capturas. Para comprimir, se puede pasar el video por `ffmpeg -i in.mov -an -vf scale=1280:-2 -c:v libx264 -crf 28 -movflags +faststart out.mp4`.
 3. **Reglas de contenido** (ver `../CLAUDE.md`):
    - No inventes métricas ni clientes.
    - En trabajos grupales, no nombres a los compañeros.
