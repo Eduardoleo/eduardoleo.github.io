@@ -48,8 +48,11 @@ jobs:
         env:
           CI: "true"
 
-      - name: Build limpio para publicar
+      - name: Build limpio para publicar (con analítica)
         run: npm run build
+        env:
+          # Incluye el script de Simple Analytics solo en lo que se publica (no en las pruebas).
+          PUBLIC_ANALYTICS: "true"
 
       - name: Enlaces internos del build
         run: npm run check:links
@@ -61,6 +64,8 @@ jobs:
           test -f dist/.well-known/security.txt
           test -f dist/cv/eduardo-leon-hernandez-cv-es.pdf
           test -f dist/cv/eduardo-leon-hernandez-cv-en.pdf
+          grep -q 'scripts.simpleanalyticscdn.com/latest.js' dist/index.html
+          ! grep -rl 'eduardoleo.github.io' dist --include='*.html' --include='*.xml' --include='*.txt'
 
       - name: Subir el artefacto de Pages
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

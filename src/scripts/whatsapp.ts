@@ -4,6 +4,8 @@
 //   import { buildWhatsAppUrl } from '../scripts/whatsapp';
 //   const url = buildWhatsAppUrl(code, 'Hola, quiero cotizar…');  // null si el código no es válido
 
+import { trackWhatsApp } from './analytics';
+
 /** Decodifica el número guardado en profile.json. Devuelve null si no es un número válido. */
 export function decodeWhatsAppNumber(code: string): string | null {
   try {
@@ -45,5 +47,6 @@ export function initWhatsAppLinks(root: ParentNode = document): void {
     const build = () => activateWhatsAppLink(a);
     ['pointerenter', 'pointerdown', 'focus', 'touchstart'].forEach((ev) => a.addEventListener(ev, build, { passive: true }));
     a.addEventListener('click', build);
+    a.addEventListener('click', () => { if (a.dataset.built) trackWhatsApp('contacto'); });
   });
 }
